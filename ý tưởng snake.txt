@@ -1,0 +1,5 @@
+chỉnh skin +map
+thêm vật cản cho map và tăng số lượng vật cản khi điểm đạt một mốc nhất định
+chỉnh chế độ game easy normal hard superhard
+chế độ khó thì thêm pacman giành thức ăn với rắn,cắn khúc nào thì mất từ khúc đó về đuôi
+trái cây
