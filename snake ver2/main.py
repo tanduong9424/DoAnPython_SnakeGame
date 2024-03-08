@@ -18,12 +18,15 @@ def get_font(size):
     return pygame.font.Font("Font/PoetsenOne-Regular.ttf", size)
 
 def play():
+    main_game = MAIN()
     SCREEN_UPDATE = pygame.USEREVENT
-    pygame.time.set_timer(SCREEN_UPDATE,150)
     screen = pygame.display.set_mode((cell_number * cell_size,cell_number * cell_size))
     clock = pygame.time.Clock()
+    #Cập nhật phản ứng màn hình
+    def set_screen_update_time(snake_speed):
+        return int(1000 / (snake_speed * 2))
+    pygame.time.set_timer(SCREEN_UPDATE,set_screen_update_time(main_game.snake.snake_speed))
 
-    main_game = MAIN()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

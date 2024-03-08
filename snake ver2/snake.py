@@ -17,6 +17,8 @@ class SNAKE:
 		self.body = [Vector2(5,10),Vector2(4,10),Vector2(3,10)]
 		self.direction = Vector2(0,0)
 		self.new_block = False
+ 		#Chỉ số tốc độ của snake
+		self.snake_speed = 3
 
 		self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
 		self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
@@ -101,6 +103,11 @@ class SNAKE:
 	def reset(self):
 		self.body = [Vector2(5,10),Vector2(4,10),Vector2(3,10)]
 		self.direction = Vector2(0,0)
+  
+	#Chỉ số tốc độ tăng lên khi đủ điểm
+	def increase_speed(self):
+		self.snake_speed += 2.5
+		print("Snake speed : ",self.snake_speed)
 
 
 class FRUIT:
@@ -121,6 +128,8 @@ class MAIN:
 	def __init__(self):
 		self.snake = SNAKE()
 		self.fruit = FRUIT()
+		self.score = 0
+		self.snake_increase = False
 
 	def update(self):
 		self.snake.move_snake()
@@ -138,6 +147,15 @@ class MAIN:
 			self.fruit.randomize()
 			self.snake.add_block()
 			self.snake.play_crunch_sound()
+   
+		#ktra điểm thêm 5 thì tăng chỉ số tốc độ
+			self.score += 1
+			if self.score % 5 ==0:
+				if not self.snake_increased:
+					self.snake.increase_speed()
+					self.snake_increased = True
+		else:
+			self.snake_increased = False
 
 		for block in self.snake.body[1:]:
 			if block == self.fruit.pos:
