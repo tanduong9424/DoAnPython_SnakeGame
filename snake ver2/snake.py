@@ -280,6 +280,13 @@ class MAIN:
 			self.snake.play_crunch_sound()
    
 		#ktra điểm thêm 5 thì tăng chỉ số tốc độ
+		# nếu điểm >10 lấy score /10=n;
+		# blocked_position.add(fruit_pos)	
+		# nếu n<4 thì while  tới n rồi 
+		# fruit_pos=Vector2(self.fruit.x,self.fruit.y)
+		# block_pos=Vector2(self.block.x,self.block.y)
+		# blocked_position.add(block_pos)
+		# self.block = BLOCK(blocked_positions=[])
 			self.score += 1
 			if self.score % 5 ==0:
 				if not self.snake_increased:
@@ -305,6 +312,7 @@ class MAIN:
 
 	def check_fail(self):
 		if self.score <0 and self.snake.hit_block==True:
+			print('chết do tông vào vật cản')
 			self.snake.hit_block = False
 			self.snake.minus_block = False
 			self.snake.second_flash =0
@@ -312,6 +320,7 @@ class MAIN:
 			self.game_over()
 
 		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
+			print('chết do tông vào tường')
 			self.game_over()
 
 		for block in self.snake.body[1:]:
