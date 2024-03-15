@@ -69,7 +69,7 @@ def options(main_game):
         SCREEN.blit(BG, (0, 0))  # Thêm hình nền
 
         OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
-        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 400))
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
         #OPTIONS_BACK = Button(image=None, pos=(400, 460), 
