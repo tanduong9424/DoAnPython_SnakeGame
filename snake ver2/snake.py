@@ -22,7 +22,7 @@ class SNAKE:
 		self.hit_block = False
 		self.second_flash=0
  		#Chỉ số tốc độ của snake
-		self.snake_speed = 3
+		self.snake_speed = 1
 
 		self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
 		self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
@@ -181,6 +181,10 @@ class SNAKE:
 	def increase_speed(self):
 		self.snake_speed += 2.5
 		print("Snake speed : ",self.snake_speed)
+  
+	#Thiết lập thêm hàm speed cho chế độ
+	def get_snake_speed(self):
+		return self.snake_speed
 
 
 class FRUIT:
