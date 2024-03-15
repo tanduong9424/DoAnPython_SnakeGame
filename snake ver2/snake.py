@@ -17,6 +17,10 @@ class SNAKE:
 		self.body = [Vector2(5,10),Vector2(4,10),Vector2(3,10)]
 		self.direction = Vector2(0,0)
 		self.new_block = False
+		self.save_direction =	Vector2(0,0)
+		self.minus_block = False
+		self.hit_block = False
+		self.second_flash=0
  		#Chỉ số tốc độ của snake
 		self.snake_speed = 3
 
@@ -38,6 +42,24 @@ class SNAKE:
 		self.body_br = pygame.image.load('Graphics/body_br.png').convert_alpha()
 		self.body_bl = pygame.image.load('Graphics/body_bl.png').convert_alpha()
 		self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
+# hit
+		self.head_up_hit = pygame.image.load('Graphics/head_up_hit.png').convert_alpha()
+		self.head_down_hit = pygame.image.load('Graphics/head_down_hit.png').convert_alpha()
+		self.head_right_hit = pygame.image.load('Graphics/head_right_hit.png').convert_alpha()
+		self.head_left_hit = pygame.image.load('Graphics/head_left_hit.png').convert_alpha()
+		
+		self.tail_up_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
+		self.tail_down_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
+		self.tail_right_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
+		self.tail_left_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
+
+		self.body_vertical_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
+		self.body_horizontal_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
+
+		self.body_tr_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
+		self.body_tl_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
+		self.body_br_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
+		self.body_bl_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
 
 	def draw_snake(self):
 		self.update_head_graphics()
@@ -83,6 +105,51 @@ class SNAKE:
 		elif tail_relation == Vector2(0,1): self.tail = self.tail_up
 		elif tail_relation == Vector2(0,-1): self.tail = self.tail_down
 
+	def draw_snake_hit(self):
+		self.update_head_graphics_hit()
+		self.update_tail_graphics_hit()
+
+		for index,block in enumerate(self.body):
+			x_pos = int(block.x * cell_size)
+			y_pos = int(block.y * cell_size)
+			block_rect = pygame.Rect(x_pos,y_pos,cell_size,cell_size)
+
+			if index == 0:
+				screen.blit(self.head,block_rect)
+			elif index == len(self.body) - 1:
+				screen.blit(self.tail,block_rect)
+			else:
+				previous_block = self.body[index + 1] - block
+				next_block = self.body[index - 1] - block
+				if previous_block.x == next_block.x:
+					screen.blit(self.body_vertical_hit,block_rect)
+				elif previous_block.y == next_block.y:
+					screen.blit(self.body_horizontal_hit,block_rect)
+				else:
+					if previous_block.x == -1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == -1:
+						screen.blit(self.body_tl_hit,block_rect)
+					elif previous_block.x == -1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == -1:
+						screen.blit(self.body_bl_hit,block_rect)
+					elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
+						screen.blit(self.body_tr_hit,block_rect)
+					elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
+						screen.blit(self.body_br_hit,block_rect)
+
+	def update_head_graphics_hit(self):
+		head_relation = self.body[1] - self.body[0]
+		if head_relation == Vector2(1,0): self.head = self.head_left_hit
+		elif head_relation == Vector2(-1,0): self.head = self.head_right_hit
+		elif head_relation == Vector2(0,1): self.head = self.head_up_hit
+		elif head_relation == Vector2(0,-1): self.head = self.head_down_hit
+
+	def update_tail_graphics_hit(self):
+		tail_relation = self.body[-2] - self.body[-1]
+		if tail_relation == Vector2(1,0): self.tail = self.tail_left_hit
+		elif tail_relation == Vector2(-1,0): self.tail = self.tail_right_hit
+		elif tail_relation == Vector2(0,1): self.tail = self.tail_up_hit
+		elif tail_relation == Vector2(0,-1): self.tail = self.tail_down_hit
+
+
 	def move_snake(self):
 		if self.new_block == True:
 			body_copy = self.body[:]
@@ -96,6 +163,12 @@ class SNAKE:
 
 	def add_block(self):
 		self.new_block = True
+
+	def minus_snake(self):
+		if self.minus_block == True:
+			body_copy = self.body[:-2]
+			self.body = body_copy[:]
+			self.minus_block = False
 
 	def play_crunch_sound(self):
 		self.crunch_sound.play()
@@ -124,28 +197,82 @@ class FRUIT:
 		self.y = random.randint(0,cell_number - 1)
 		self.pos = Vector2(self.x,self.y)
 
+class BLOCK:
+    def __init__(self, blocked_positions=[]):
+        self.randomize(blocked_positions)
+
+    def draw_block(self):
+        block_rect = pygame.Rect(int(self.pos.x * cell_size), int(self.pos.y * cell_size), cell_size, cell_size)
+        pygame.draw.rect(screen, (255, 255, 255), block_rect)
+
+    def randomize(self, blocked_positions=[]):
+        self.x = random.randint(0, cell_number - 1)
+        self.y = random.randint(0, cell_number - 1)
+        self.pos = Vector2(self.x, self.y)
+
+        # Kiểm tra xem vị trí mới của BLOCK có trùng với FRUIT không
+        while self.pos in blocked_positions:
+            self.x = random.randint(0, cell_number - 1)
+            self.y = random.randint(0, cell_number - 1)
+            self.pos = Vector2(self.x, self.y)
 class MAIN:
 	def __init__(self):
 		self.snake = SNAKE()
 		self.fruit = FRUIT()
+
+		fruit_pos=Vector2(self.fruit.x,self.fruit.y)
+		self.block = BLOCK(blocked_positions=[fruit_pos])
+
 		self.score = 0
 		self.snake_increase = False
 
 	def update(self):
-		self.snake.move_snake()
+		if self.snake.hit_block == False:
+			if self.snake.save_direction!= Vector2(0,0):
+				self.snake.direction=self.snake.save_direction
+				self.snake.save_direction=Vector2(0,0)
+			self.snake.move_snake()
+		else:
+			if(self.snake.direction!=Vector2(0,0)):
+				self.snake.save_direction=self.snake.direction
+			self.snake.direction = Vector2(0,0)	
+
 		self.check_collision()
+
+		if self.snake.minus_block ==True and self.snake.hit_block == True:
+			self.snake.minus_snake()
+			self.score-=2	
+
 		self.check_fail()
 
 	def draw_elements(self):
 		self.draw_grass()
 		self.fruit.draw_fruit()
-		self.snake.draw_snake()
+
+		if self.snake.hit_block == True:
+			if self.snake.second_flash <50 or self.snake.second_flash>100 and self.snake.second_flash<150:
+				self.snake.draw_snake()
+			elif  self.snake.second_flash >50 and self.snake.second_flash<101 or self.snake.second_flash>150:
+				self.snake.draw_snake_hit()
+			self.snake.second_flash +=1
+		elif self.snake.hit_block == False :
+			self.snake.draw_snake()
+		if self.snake.second_flash == 200:
+			self.snake.second_flash =0
+			self.snake.hit_block = False
+		self.block.draw_block()
+
 		self.draw_score()
+
 
 	def check_collision(self):
 		if self.fruit.pos == self.snake.body[0]:
 			self.fruit.randomize()
 			self.snake.add_block()
+
+			pos_fruit=Vector2(self.fruit.x,self.fruit.y)
+			self.block.randomize(blocked_positions=[pos_fruit])
+
 			self.snake.play_crunch_sound()
    
 		#ktra điểm thêm 5 thì tăng chỉ số tốc độ
@@ -156,12 +283,30 @@ class MAIN:
 					self.snake_increased = True
 		else:
 			self.snake_increased = False
-
+# block
+		if self.block.pos == self.snake.body[0]:
+			self.fruit.randomize()
+			pos_fruit=Vector2(self.fruit.x,self.fruit.y)
+			self.block.randomize(blocked_positions=[pos_fruit])
+			self.snake.hit_block = True
+			self.snake.minus_block = True
+			self.snake.second_flash =0
+# spawn fruit,block
 		for block in self.snake.body[1:]:
 			if block == self.fruit.pos:
 				self.fruit.randomize()
+			if block ==self.block.pos:
+				pos_fruit=Vector2(self.fruit.x,self.fruit.y)
+				self.block.randomize(blocked_positions=[pos_fruit])			
 
 	def check_fail(self):
+		if self.score <0 and self.snake.hit_block==True:
+			self.snake.hit_block = False
+			self.snake.minus_block = False
+			self.snake.second_flash =0
+			self.snake.save_direction=Vector2(0,0)
+			self.game_over()
+
 		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
 			self.game_over()
 
@@ -170,6 +315,7 @@ class MAIN:
 				self.game_over()
 		
 	def game_over(self):
+		self.score=0
 		self.snake.reset()
 
 	def draw_grass(self):
