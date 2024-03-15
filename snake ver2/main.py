@@ -9,13 +9,13 @@ cell_number = 20
 
 SCREEN = pygame.display.set_mode((cell_number * cell_size, cell_number * cell_size))
 pygame.display.set_caption("Snake")
-pygame.display.set_icon(pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/assets/logogame.png').convert_alpha())
+pygame.display.set_icon(pygame.image.load('assets/logogame.png').convert_alpha())
 
 
-BG = pygame.image.load("C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/assets/bg.png")
+BG = pygame.image.load("assets/bg.png")
 
 def get_font(size):
-    return pygame.font.Font("C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/Font/PoetsenOne-Regular.ttf", size)
+    return pygame.font.Font("Font/PoetsenOne-Regular.ttf", size)
 
 def play(snake_speed):
     main_game = MAIN()
@@ -59,7 +59,7 @@ def play(snake_speed):
 def options(main_game):
     selected_difficulty = None
     #Giao diện
-    frame_image = pygame.image.load("C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/assets/Options Rect.png").convert_alpha()
+    frame_image = pygame.image.load("assets/Options Rect.png").convert_alpha()
     frame_positions = [(400, 200), (400, 320), (400, 440), (400, 560)]
     frame_height = frame_image.get_height()
 
@@ -136,11 +136,11 @@ def main_menu():
         MENU_TEXT = get_font(100).render("Snake Game", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(400, 100))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/assets/Play Rect.png"), pos=(400, 250), 
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(400, 250), 
                             text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/assets/Options Rect.png"), pos=(400, 400), 
+        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(400, 400), 
                             text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("C:/Users/ADMIN/Downloads/snakegame-main (1)/snakegame-main/snake ver2/assets/Quit Rect.png"), pos=(400, 550), 
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(400, 550), 
                             text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
