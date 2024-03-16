@@ -200,9 +200,8 @@ class FRUIT:
 		self.pos = Vector2(self.x,self.y)
 
 class BLOCK:
-    def __init__(self, blocked_positions=[]):
-        self.randomize(blocked_positions)
-
+    def __init__(self, position=Vector2()):
+        self.pos=position
     def draw_block(self):
         block_rect = pygame.Rect(int(self.pos.x * cell_size), int(self.pos.y * cell_size), cell_size, cell_size)
         pygame.draw.rect(screen, (255, 255, 255), block_rect)
@@ -222,8 +221,8 @@ class MAIN:
 		self.snake = SNAKE()
 		self.fruit = FRUIT()
 
-		fruit_pos=Vector2(self.fruit.x,self.fruit.y)
-		self.block = BLOCK(blocked_positions=[fruit_pos])
+		self.blocked_positions=[]
+		self.block = []
 
 		self.score = 0
 		self.snake_increase = False
@@ -238,6 +237,7 @@ class MAIN:
 			if(self.snake.direction!=Vector2(0,0)):
 				self.snake.save_direction=self.snake.direction
 			self.snake.direction = Vector2(0,0)	
+
 
 		self.check_collision()
 
@@ -262,26 +262,20 @@ class MAIN:
 		if self.snake.second_flash == 200:
 			self.snake.second_flash =0
 			self.snake.hit_block = False
-		self.block.draw_block()
-
+		if len(self.block)>0:
+			for i in range(0,len(self.block)):
+				pos_block=self.block[i]
+				block=BLOCK(pos_block)
+				block.draw_block()
+		
 		self.draw_score()
 
 
 	def check_collision(self):
+# fruit
 		if self.fruit.pos == self.snake.body[0]:
 			self.fruit.randomize()
 			self.snake.add_block()
-
-			pos_fruit=Vector2(self.fruit.x,self.fruit.y)
-			pos_snake=Vector2(self.snake.body[0].x,self.snake.body[0].y)
-			pos_distance=[Vector2(2,0),Vector2(2,2),Vector2(0,2),Vector2(1,0),Vector2(1,1),Vector2(0,1),]
-			blocked_position=[]
-			blocked_position.append(pos_fruit)
-			for i in range(0,6):
-				pos_temp=pos_distance[i]+pos_snake
-				blocked_position.append(pos_temp)
-			self.block.randomize(blocked_position)
-
 			self.snake.play_crunch_sound()
    
 		#ktra điểm thêm 5 thì tăng chỉ số tốc độ
@@ -297,39 +291,84 @@ class MAIN:
 				if not self.snake_increased:
 					self.snake.increase_speed()
 					self.snake_increased = True
-		else:
-			self.snake_increased = False
-# block
-		if self.block.pos == self.snake.body[0]:
-			self.fruit.randomize()
 
+			self.blocked_positions.clear()
+			self.block.clear()
 			pos_fruit=Vector2(self.fruit.x,self.fruit.y)
 			pos_snake=Vector2(self.snake.body[0].x,self.snake.body[0].y)
 			pos_distance=[Vector2(2,0),Vector2(2,2),Vector2(0,2),Vector2(1,0),Vector2(1,1),Vector2(0,1),]
-			blocked_position=[]
-			blocked_position.append(pos_fruit)
 			for i in range(0,6):
 				pos_temp=pos_distance[i]+pos_snake
-				blocked_position.append(pos_temp)
-			self.block.randomize(blocked_position)
+				self.blocked_positions.append(pos_temp)
+			self.blocked_positions.append(pos_fruit)
 
-			self.snake.hit_block = True
-			self.snake.minus_block = True
-			self.snake.second_flash =0
+			if self.score>=5:
+				n=self.score//5
+				if(n>4):
+					n=4
+				for i in range(0,n):
+					self.create_new_block()
+		else:
+			self.snake_increased = False
+
+# block
+		for i in range(0,len(self.block)):
+			if self.block[i] == self.snake.body[0]:
+				self.fruit.randomize()
+
+				self.blocked_positions.clear()
+				self.block.clear()
+				pos_fruit=Vector2(self.fruit.x,self.fruit.y)
+				pos_snake=Vector2(self.snake.body[0].x,self.snake.body[0].y)
+				pos_distance=[Vector2(2,0),Vector2(2,2),Vector2(0,2),Vector2(1,0),Vector2(1,1),Vector2(0,1),]
+				for i in range(0,6):
+					pos_temp=pos_distance[i]+pos_snake
+					self.blocked_positions.append(pos_temp)
+				self.blocked_positions.append(pos_fruit)
+
+				if self.score>=5:
+					n=self.score//5
+					if(n>4):
+						n=4
+					for i in range(0,n):
+						self.create_new_block()
+
+				self.snake.hit_block = True
+				self.snake.minus_block = True
+				self.snake.second_flash =0
 # spawn fruit,block
 		for block in self.snake.body[1:]:
 			if block == self.fruit.pos:
 				self.fruit.randomize()
-			if block ==self.block.pos:
-				pos_fruit=Vector2(self.fruit.x,self.fruit.y)
-				pos_snake=Vector2(self.snake.body[0].x,self.snake.body[0].y)
-				pos_distance=[Vector2(2,0),Vector2(2,2),Vector2(0,2),Vector2(1,0),Vector2(1,1),Vector2(0,1),]
-				blocked_position=[]
-				blocked_position.append(pos_fruit)
-				for i in range(0,6):
-					pos_temp=pos_distance[i]+pos_snake
-					blocked_position.append(pos_temp)
-				self.block.randomize(blocked_position)		
+			for i in range(0,len(self.block)):
+				if block ==self.block[i]:
+					self.blocked_positions.clear()
+					self.block.clear()
+					pos_fruit=Vector2(self.fruit.x,self.fruit.y)
+					pos_snake=Vector2(self.snake.body[0].x,self.snake.body[0].y)
+					pos_distance=[Vector2(2,0),Vector2(2,2),Vector2(0,2),Vector2(1,0),Vector2(1,1),Vector2(0,1),]
+					for i in range(0,6):
+						pos_temp=pos_distance[i]+pos_snake
+						self.blocked_positions.append(pos_temp)
+					self.blocked_positions.append(pos_fruit)
+
+					if self.score>=5:
+						n=self.score//5
+						if(n>4):
+							n=4
+						for i in range(0,n):
+							self.create_new_block()
+
+	def create_new_block(self):
+			block_x=random.randint(0,cell_number-1)
+			block_y=random.randint(0,cell_number-1)	
+			block_pos=Vector2(block_x,block_y)
+			while block_pos  in self.blocked_positions:
+				block_x=random.randint(0,cell_number-1)
+				block_y=random.randint(0,cell_number-1)	
+				block_pos=Vector2(block_x,block_y)				
+			self.blocked_positions.append(block_pos)
+			self.block.append(block_pos)		
 
 	def check_fail(self):
 		if self.score <0 and self.snake.hit_block==True:
