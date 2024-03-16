@@ -25,10 +25,7 @@ def play(snake_speed):
     clock = pygame.time.Clock()
     
     #Cập nhật phản ứng màn hình
-    def set_screen_update_time(snake_speed):
-        return int(1000 / (snake_speed * 2))
-    
-    pygame.time.set_timer(SCREEN_UPDATE,set_screen_update_time(main_game.snake.snake_speed))
+    pygame.time.set_timer(SCREEN_UPDATE, int(1000 / (snake_speed * 2)))
 
     while True:
         for event in pygame.event.get():
