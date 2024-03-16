@@ -4,8 +4,13 @@ from pygame.math import Vector2
 pygame.mixer.pre_init(44100,-16,2,512)
 pygame.init()
 cell_size = 40
-cell_number = 20
-screen = pygame.display.set_mode((cell_number * cell_size,cell_number * cell_size))
+cell_number = 30
+SCREEN_WIDTH=cell_number*cell_size
+SCREEN_HEIGHT=cell_number*8//13*cell_size
+score_x = int(cell_size * cell_number - 60)#lưu lại tọa độ bảng score để spwan tránh nó ra
+score_y = int(cell_size * cell_number*8//13 - 40)
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
 apple = pygame.image.load('Graphics/apple.png').convert_alpha()
 game_font = pygame.font.Font('Font/PoetsenOne-Regular.ttf', 25)
@@ -61,6 +66,7 @@ class SNAKE:
 		self.body_br_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
 		self.body_bl_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
 
+		
 	def draw_snake(self):
 		self.update_head_graphics()
 		self.update_tail_graphics()
@@ -69,7 +75,7 @@ class SNAKE:
 			x_pos = int(block.x * cell_size)
 			y_pos = int(block.y * cell_size)
 			block_rect = pygame.Rect(x_pos,y_pos,cell_size,cell_size)
-
+			
 			if index == 0:
 				screen.blit(self.head,block_rect)
 			elif index == len(self.body) - 1:
@@ -196,26 +202,31 @@ class FRUIT:
 
 	def randomize(self):
 		self.x = random.randint(0,cell_number - 1)
-		self.y = random.randint(0,cell_number - 1)
+		self.y = random.randint(0,cell_number*8//13 - 1)
+		while self.x==score_x or self.y==score_y :#tránh spwan lên cái bảng điểm
+			self.x = random.randint(0,cell_number - 1)
+			self.y = random.randint(0,cell_number*8//13 - 1)
 		self.pos = Vector2(self.x,self.y)
 
 class BLOCK:
     def __init__(self, position=Vector2()):
         self.pos=position
+
     def draw_block(self):
+        block_image = pygame.image.load('Graphics/block.png').convert_alpha()
         block_rect = pygame.Rect(int(self.pos.x * cell_size), int(self.pos.y * cell_size), cell_size, cell_size)
-        pygame.draw.rect(screen, (255, 255, 255), block_rect)
+        screen.blit(block_image, block_rect)
 
     def randomize(self, blocked_positions=[]):
         self.x = random.randint(0, cell_number - 1)
-        self.y = random.randint(0, cell_number - 1)
+        self.y = random.randint(0, cell_number*8//13 - 1)
+        
+        # Kiểm tra xem vị trí mới của BLOCK có trùng với FRUIT không
+        while (Vector2(self.x, self.y) in blocked_positions) and (self.x == score_x or self.y == score_y):
+            self.x = random.randint(0, cell_number - 1)
+            self.y = random.randint(0, cell_number*8//13 - 1)
         self.pos = Vector2(self.x, self.y)
 
-        # Kiểm tra xem vị trí mới của BLOCK có trùng với FRUIT không
-        while self.pos in blocked_positions:
-            self.x = random.randint(0, cell_number - 1)
-            self.y = random.randint(0, cell_number - 1)
-            self.pos = Vector2(self.x, self.y)
 class MAIN:
 	def __init__(self):
 		self.snake = SNAKE()
@@ -237,7 +248,6 @@ class MAIN:
 			if(self.snake.direction!=Vector2(0,0)):
 				self.snake.save_direction=self.snake.direction
 			self.snake.direction = Vector2(0,0)	
-
 
 		self.check_collision()
 
@@ -361,11 +371,11 @@ class MAIN:
 
 	def create_new_block(self):
 			block_x=random.randint(0,cell_number-1)
-			block_y=random.randint(0,cell_number-1)	
+			block_y=random.randint(0,cell_number*8//13-1)	
 			block_pos=Vector2(block_x,block_y)
 			while block_pos  in self.blocked_positions:
 				block_x=random.randint(0,cell_number-1)
-				block_y=random.randint(0,cell_number-1)	
+				block_y=random.randint(0,cell_number*8//13-1)	
 				block_pos=Vector2(block_x,block_y)				
 			self.blocked_positions.append(block_pos)
 			self.block.append(block_pos)		
@@ -379,7 +389,7 @@ class MAIN:
 			self.snake.save_direction=Vector2(0,0)
 			self.game_over()
 
-		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
+		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number*8//13:
 			print('chết do tông vào tường')
 			self.game_over()
 
@@ -408,9 +418,8 @@ class MAIN:
 	def draw_score(self):
 		score_text = str(len(self.snake.body) - 3)
 		score_surface = game_font.render(score_text,True,(56,74,12))
-		score_x = int(cell_size * cell_number - 60)
-		score_y = int(cell_size * cell_number - 40)
-		score_rect = score_surface.get_rect(center = (score_x,score_y))
+		
+		score_rect = score_surface.get_rect(bottomright = (score_x,score_y))
 		apple_rect = apple.get_rect(midright = (score_rect.left,score_rect.centery))
 		bg_rect = pygame.Rect(apple_rect.left,apple_rect.top,apple_rect.width + score_rect.width + 6,apple_rect.height)
 
