@@ -5,6 +5,7 @@ pygame.mixer.pre_init(44100,-16,2,512)
 pygame.init()
 cell_size = 40
 cell_number = 30
+
 SCREEN_WIDTH=cell_number*cell_size
 SCREEN_HEIGHT=cell_number*8//13*cell_size
 score_x = int(cell_size * cell_number - 60)#lưu lại tọa độ bảng score để spwan tránh nó ra
@@ -12,8 +13,8 @@ score_y = int(cell_size * cell_number*8//13 - 40)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
-apple = pygame.image.load('Graphics/apple.png').convert_alpha()
-game_font = pygame.font.Font('Font/PoetsenOne-Regular.ttf', 25)
+apple = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/apple.png').convert_alpha()
+game_font = pygame.font.Font('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Font/PoetsenOne-Regular.ttf', 25)
 
 
 
@@ -29,42 +30,42 @@ class SNAKE:
  		#Chỉ số tốc độ của snake
 		self.snake_speed = 3
 
-		self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
-		self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
-		self.head_right = pygame.image.load('Graphics/head_right.png').convert_alpha()
-		self.head_left = pygame.image.load('Graphics/head_left.png').convert_alpha()
+		self.head_up = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_up.png').convert_alpha()
+		self.head_down = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_down.png').convert_alpha()
+		self.head_right = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_right.png').convert_alpha()
+		self.head_left = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_left.png').convert_alpha()
 		
-		self.tail_up = pygame.image.load('Graphics/tail_up.png').convert_alpha()
-		self.tail_down = pygame.image.load('Graphics/tail_down.png').convert_alpha()
-		self.tail_right = pygame.image.load('Graphics/tail_right.png').convert_alpha()
-		self.tail_left = pygame.image.load('Graphics/tail_left.png').convert_alpha()
+		self.tail_up = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_up.png').convert_alpha()
+		self.tail_down = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_down.png').convert_alpha()
+		self.tail_right = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_right.png').convert_alpha()
+		self.tail_left = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_left.png').convert_alpha()
 
-		self.body_vertical = pygame.image.load('Graphics/body_vertical.png').convert_alpha()
-		self.body_horizontal = pygame.image.load('Graphics/body_horizontal.png').convert_alpha()
+		self.body_vertical = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_vertical.png').convert_alpha()
+		self.body_horizontal = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_horizontal.png').convert_alpha()
 
-		self.body_tr = pygame.image.load('Graphics/body_tr.png').convert_alpha()
-		self.body_tl = pygame.image.load('Graphics/body_tl.png').convert_alpha()
-		self.body_br = pygame.image.load('Graphics/body_br.png').convert_alpha()
-		self.body_bl = pygame.image.load('Graphics/body_bl.png').convert_alpha()
-		self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
+		self.body_tr = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_tr.png').convert_alpha()
+		self.body_tl = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_tl.png').convert_alpha()
+		self.body_br = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_br.png').convert_alpha()
+		self.body_bl = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_bl.png').convert_alpha()
+		self.crunch_sound = pygame.mixer.Sound('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Sound/crunch.wav')
 # hit
-		self.head_up_hit = pygame.image.load('Graphics/head_up_hit.png').convert_alpha()
-		self.head_down_hit = pygame.image.load('Graphics/head_down_hit.png').convert_alpha()
-		self.head_right_hit = pygame.image.load('Graphics/head_right_hit.png').convert_alpha()
-		self.head_left_hit = pygame.image.load('Graphics/head_left_hit.png').convert_alpha()
+		self.head_up_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_up_hit.png').convert_alpha()
+		self.head_down_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_down_hit.png').convert_alpha()
+		self.head_right_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_right_hit.png').convert_alpha()
+		self.head_left_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/head_left_hit.png').convert_alpha()
 		
-		self.tail_up_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
-		self.tail_down_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
-		self.tail_right_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
-		self.tail_left_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
+		self.tail_up_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_up_hit.png').convert_alpha()
+		self.tail_down_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_down_hit.png').convert_alpha()
+		self.tail_right_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_right_hit.png').convert_alpha()
+		self.tail_left_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/tail_left_hit.png').convert_alpha()
 
-		self.body_vertical_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
-		self.body_horizontal_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
+		self.body_vertical_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_vertical_hit.png').convert_alpha()
+		self.body_horizontal_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_horizontal_hit.png').convert_alpha()
 
-		self.body_tr_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
-		self.body_tl_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
-		self.body_br_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
-		self.body_bl_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
+		self.body_tr_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_tr_hit.png').convert_alpha()
+		self.body_tl_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_tl_hit.png').convert_alpha()
+		self.body_br_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_br_hit.png').convert_alpha()
+		self.body_bl_hit = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/body_bl_hit.png').convert_alpha()
 
 		
 	def draw_snake(self):
@@ -191,6 +192,8 @@ class SNAKE:
 	#Thiết lập thêm hàm speed cho chế độ
 	def get_snake_speed(self):
 		return self.snake_speed
+
+
 class FRUIT:
 	def __init__(self):
 		self.randomize()
@@ -213,7 +216,7 @@ class BLOCK:
         self.pos=position
 
     def draw_block(self):
-        block_image = pygame.image.load('Graphics/block.png').convert_alpha()
+        block_image = pygame.image.load('C:/Users/ADMIN/Downloads/snakegame-main (2)/snakegame/snake ver2/Graphics/block.png').convert_alpha()
         block_rect = pygame.Rect(int(self.pos.x * cell_size), int(self.pos.y * cell_size), cell_size, cell_size)
         screen.blit(block_image, block_rect)
 
@@ -399,6 +402,11 @@ class MAIN:
 		
 	def game_over(self):
 		self.score=0
+		self.snake.reset()
+  
+	def reset(self):
+		self.is_paused = False  # Thoát khỏi màn hình pause
+		self.score = 0
 		self.snake.reset()
 
 	def draw_grass(self):
