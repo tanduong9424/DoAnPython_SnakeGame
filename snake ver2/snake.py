@@ -402,7 +402,6 @@ class MAIN:
 
 		for block in self.snake.body[1:]:
 			if block == self.snake.body[0]:
-				self.fruit.random=True
 				self.game_over()
 		
 	def game_over(self):
