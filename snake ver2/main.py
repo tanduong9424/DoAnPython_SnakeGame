@@ -63,7 +63,6 @@ def get_font(size):
 
 def play(snake_speed):
     main_game = MAIN()
-    
     #paused
     paused = False
     
@@ -115,6 +114,7 @@ def play(snake_speed):
         # Hiển thị màn hình pause
             action = draw_pause_screen(SCREEN, main_game)
             if action == "RESET":  # Nếu người dùng chọn reset
+                main_game.fruit.random=True
                 main_game.reset()  # Reset trò chơi
                 paused = False  # Đặt trạng thái paused về False để tiếp tục chơi theo hướng đang di chuyển
             elif action == True:  # Nếu người dùng chọn tiếp tục
@@ -148,6 +148,7 @@ def draw_pause_screen(SCREEN, main_game):
                     main_game.snake.direction = main_game.snake.save_direction  # Thiết lập hướng trở lại như cũ khi tiếp tục
                     return True  # Quay lại trò chơi
                 elif RESET_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    main_game.fruit.random=True
                     main_game.reset()  # Gọi phương thức reset của đối tượng snake trong main_game
                     return "RESET"  # Trả về giá trị "RESET" khi người dùng chọn reset
                 elif QUIT_BOTTON.checkForInput(pygame.mouse.get_pos()):

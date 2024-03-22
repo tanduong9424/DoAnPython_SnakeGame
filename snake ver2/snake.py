@@ -197,6 +197,7 @@ class SNAKE:
 class FRUIT:
 	def __init__(self):
 		self.randomize()
+		self.random = False
 
 	def draw_fruit(self):
 		fruit_rect = pygame.Rect(int(self.pos.x * cell_size),int(self.pos.y * cell_size),cell_size,cell_size)
@@ -370,6 +371,7 @@ class MAIN:
 						self.blocked_positions.append(pos_temp)
 					self.blocked_positions.append(pos_fruit)
 					self.creat = True
+					break
 
 
 	def create_new_block(self):
@@ -390,20 +392,26 @@ class MAIN:
 			self.snake.minus_block = False
 			self.snake.second_flash =0
 			self.snake.save_direction=Vector2(0,0)
+			self.fruit.random=True
 			self.game_over()
 
 		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number*8//13:
 			print('chết do tông vào tường')
+			self.fruit.random=True
 			self.game_over()
 
 		for block in self.snake.body[1:]:
 			if block == self.snake.body[0]:
+				self.fruit.random=True
 				self.game_over()
 		
 	def game_over(self):
 		self.reset()
   
 	def reset(self):
+		if(self.fruit.random==True):
+			self.fruit.randomize()
+			self.fruit.random=False
 		self.is_paused = False  # Thoát khỏi màn hình pause
 		self.blocked_positions.clear()
 		self.block.clear()
