@@ -14,6 +14,7 @@ score_y = int(cell_size * cell_number*8//13 - 40)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
 apple = pygame.image.load('Graphics/apple.png').convert_alpha()
+mushroom=pygame.image.load('Graphics/mushroom2.png').convert_alpha()
 game_font = pygame.font.Font('Font/PoetsenOne-Regular.ttf', 25)
 
 
@@ -212,6 +213,23 @@ class FRUIT:
 			self.y = random.randint(0,cell_number*8//13 - 1)
 		self.pos = Vector2(self.x,self.y)
 
+# Fruit reverse
+# mode là 1 thì mới chạy , thêm chức năng nếu mode là 2,3 thì sẽ chạy xuyên tường
+class Reverse(FRUIT):
+	def __init__(self,blocked_positions=[]):
+		self.randomize(blocked_positions)
+		self.random = False
+	def draw_fruit(self):
+		fruit_rect = pygame.Rect(int(self.pos.x * cell_size),int(self.pos.y * cell_size),cell_size,cell_size)
+		screen.blit(mushroom,fruit_rect)
+	def randomize(self,blocked_position=[]):
+		self.x = random.randint(0,cell_number-1)
+		self.y = random.randint(0, cell_number*8//13 -1)
+		while (Vector2(self.x,self.y) in blocked_position) and (self.x == score_x or self.y == score_y):
+			self.x = random.randint(0,cell_number-1)
+			self.y - random.randint(0, cell_number*8//13 -1)
+		self.pos = Vector2(self.x,self.y)
+
 class BLOCK:
     def __init__(self, position=Vector2()):
         self.pos=position
@@ -232,15 +250,23 @@ class BLOCK:
         self.pos = Vector2(self.x, self.y)
 
 class MAIN:
-	def __init__(self):
+	def __init__(self,mode=0):
 		self.snake = SNAKE()
 		self.fruit = FRUIT()
 
 		self.blocked_positions=[]
+		fruit_pos=Vector2(self.fruit.x,self.fruit.y)
+		self.blocked_positions.append(fruit_pos)
 		self.block = []
 
+		if(mode !=0):
+			self.mushroom = Reverse(self.blocked_positions)
+
+		self.reverse_mushroom=False
+		self.reverse_time=0
 		self.score = 0
 		self.count_block=0
+		self.modechosen=mode
 		self.creat = False
 		self.snake_increase = False
 
@@ -276,6 +302,8 @@ class MAIN:
 	def draw_elements(self):
 		self.draw_grass()
 		self.fruit.draw_fruit()
+		if(self.modechosen !=0):
+			self.mushroom.draw_fruit()
 
 		if self.snake.hit_block == True:
 			if self.snake.second_flash <50 or self.snake.second_flash>100 and self.snake.second_flash<150:
@@ -303,15 +331,7 @@ class MAIN:
 			self.fruit.randomize()
 			self.snake.add_block()
 			self.snake.play_crunch_sound()
-   
-		#ktra điểm thêm 5 thì tăng chỉ số tốc độ
-		# nếu điểm >10 lấy score /10=n;
-		# blocked_position.add(fruit_pos)	
-		# nếu n<4 thì while  tới n rồi 
-		# fruit_pos=Vector2(self.fruit.x,self.fruit.y)
-		# block_pos=Vector2(self.block.x,self.block.y)
-		# blocked_position.add(block_pos)
-		# self.block = BLOCK(blocked_positions=[])
+
 			self.score += 1
 			if self.score % 5 ==0:
 				if not self.snake_increased:
@@ -327,12 +347,21 @@ class MAIN:
 				pos_temp=pos_distance[i]+pos_snake
 				self.blocked_positions.append(pos_temp)
 			self.blocked_positions.append(pos_fruit)
+			if self.modechosen!=0:
+				self.mushroom.randomize(self.blocked_positions)
+				pos_mushroom=Vector2(self.mushroom.x,self.mushroom.y)
+				self.blocked_positions.append(pos_mushroom)
 
 			self.creat = True
 
 		else:
 			self.snake_increased = False
-
+# Mushroom
+		if(self.modechosen!=0):
+			if self.mushroom.pos == self.snake.body[0]:	
+				self.reverse_mushroom=True
+				self.reverse_time=0
+				self.mushroom.randomize(self.blocked_positions)
 # block
 		for i in range(0,len(self.block)):
 			# print("i",i," block",self.block[i], " len()",len(self.block), " snake",self.snake.body[0])
@@ -348,6 +377,10 @@ class MAIN:
 					pos_temp=pos_distance[i]+pos_snake
 					self.blocked_positions.append(pos_temp)
 				self.blocked_positions.append(pos_fruit)
+				if self.modechosen!=0:
+					self.mushroom.randomize(self.blocked_positions)
+					pos_mushroom=Vector2(self.mushroom.x,self.mushroom.y)
+					self.blocked_positions.append(pos_mushroom)		
 
 				self.creat = True
 
@@ -359,6 +392,9 @@ class MAIN:
 		for block in self.snake.body[1:]:
 			if block == self.fruit.pos:
 				self.fruit.randomize()
+			if self.modechosen!=0:
+				if block ==self.mushroom.pos:
+					self.mushroom.randomize(self.blocked_positions)
 			for i in range(0,len(self.block)):
 				if block ==self.block[i]:
 					self.blocked_positions.clear()
@@ -370,6 +406,9 @@ class MAIN:
 						pos_temp=pos_distance[i]+pos_snake
 						self.blocked_positions.append(pos_temp)
 					self.blocked_positions.append(pos_fruit)
+					if self.modechosen!=0:
+						pos_mushroom=Vector2(self.mushroom.x,self.mushroom.y)
+						self.blocked_positions.append(pos_mushroom)	
 					self.creat = True
 					break
 
@@ -390,6 +429,8 @@ class MAIN:
 			print('chết do tông vào vật cản')
 			self.snake.hit_block = False
 			self.snake.minus_block = False
+			self.reverse_mushroom=False
+			self.reverse_time=0
 			self.snake.second_flash =0
 			self.snake.save_direction=Vector2(0,0)
 			self.fruit.random=True
@@ -398,6 +439,7 @@ class MAIN:
 		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number*8//13:
 			print('chết do tông vào tường')
 			self.fruit.random=True
+			print(self.modechosen)
 			self.game_over()
 
 		for block in self.snake.body[1:]:
@@ -416,6 +458,8 @@ class MAIN:
 		self.block.clear()
 		self.snake.save_direction=Vector2(0,0)
 		self.score = 0
+		self.reverse_mushroom=False
+		self.reverse_time=0		
 		self.count_block=0
 		self.snake.reset()
 

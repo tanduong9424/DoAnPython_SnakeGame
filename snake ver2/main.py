@@ -61,8 +61,8 @@ def scroll_bg():
 def get_font(size):
     return pygame.font.Font("Font/PoetsenOne-Regular.ttf", size)
 
-def play(snake_speed):
-    main_game = MAIN()
+def play(snake_speed,mode):
+    main_game = MAIN(mode)
     #paused
     paused = False
     
@@ -84,23 +84,48 @@ def play(snake_speed):
                 sys.exit()
             if event.type == SCREEN_UPDATE:
                 main_game.update()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    if main_game.snake.direction.y != 1:
-                        main_game.snake.direction = Vector2(0,-1)
-                if event.key == pygame.K_RIGHT:
-                    if main_game.snake.direction.x != -1:
-                        main_game.snake.direction = Vector2(1,0)
-                if event.key == pygame.K_DOWN:
-                    if main_game.snake.direction.y != -1:
-                        main_game.snake.direction = Vector2(0,1)
-                if event.key == pygame.K_LEFT:
-                    if main_game.snake.direction.x != 1:
-                        main_game.snake.direction = Vector2(-1,0)
-                if event.key == pygame.K_p:  # Bắt pause khi phím 'p' được nhấn
-                    if not paused:  # Nếu trò chơi không bị tạm dừng
-                        main_game.snake.save_direction = main_game.snake.direction  # Lưu hướng hiện tại của rắn
-                    paused = not paused  # Chuyển trạng thái của biến paused
+                if(main_game.reverse_mushroom==True):
+                    main_game.reverse_time+=1
+                print(main_game.reverse_mushroom , main_game.reverse_time)
+                if(main_game.reverse_time>=30):
+                    main_game.reverse_mushroom=False
+                    main_game.reverse_time=0
+            if main_game.reverse_mushroom==True:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        if main_game.snake.direction.y != -1:
+                            main_game.snake.direction = Vector2(0,1)
+                    if event.key == pygame.K_RIGHT:
+                        if main_game.snake.direction.x != 1:
+                            main_game.snake.direction = Vector2(-1,0)
+                    if event.key == pygame.K_DOWN:
+                        if main_game.snake.direction.y != 1:
+                            main_game.snake.direction = Vector2(0,-1)
+                    if event.key == pygame.K_LEFT:
+                        if main_game.snake.direction.x != -1:
+                            main_game.snake.direction = Vector2(1,0)
+                    if event.key == pygame.K_p:  # Bắt pause khi phím 'p' được nhấn
+                        if not paused:  # Nếu trò chơi không bị tạm dừng
+                            main_game.snake.save_direction = main_game.snake.direction  # Lưu hướng hiện tại của rắn
+                        paused = not paused  # Chuyển trạng thái của biến paused                
+            elif main_game.reverse_mushroom == False:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        if main_game.snake.direction.y != 1:
+                            main_game.snake.direction = Vector2(0,-1)
+                    if event.key == pygame.K_RIGHT:
+                        if main_game.snake.direction.x != -1:
+                            main_game.snake.direction = Vector2(1,0)
+                    if event.key == pygame.K_DOWN:
+                        if main_game.snake.direction.y != -1:
+                            main_game.snake.direction = Vector2(0,1)
+                    if event.key == pygame.K_LEFT:
+                        if main_game.snake.direction.x != 1:
+                            main_game.snake.direction = Vector2(-1,0)
+                    if event.key == pygame.K_p:  # Bắt pause khi phím 'p' được nhấn
+                        if not paused:  # Nếu trò chơi không bị tạm dừng
+                            main_game.snake.save_direction = main_game.snake.direction  # Lưu hướng hiện tại của rắn
+                        paused = not paused  # Chuyển trạng thái của biến paused
                     
 
         SCREEN.fill((175,215,70))
@@ -177,6 +202,7 @@ def draw_pause_screen(SCREEN, main_game):
     
 def options(main_game):
     selected_difficulty = None
+    mode=0
     #Giao diện
     #frame_image = pygame.image.load("assets/Options Rect.png").convert_alpha()
     #frame_positions = [(400, 200), (400, 320), (400, 440), (400, 560)]
@@ -229,16 +255,20 @@ def options(main_game):
                 #Kiểm tra người dùng chọn mức độ nào
                 if EASY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed()
-                    play(snake_speed)        
+                    mode=0
+                    play(snake_speed,mode)        
                 elif NORMAL_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed() * 2
-                    play(snake_speed)        
+                    mode=1
+                    play(snake_speed,mode)        
                 elif HARD_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed() * 3
-                    play(snake_speed)        
+                    mode=2
+                    play(snake_speed,mode)        
                 elif SUPER_HARD_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed() * 4
-                    play(snake_speed)       
+                    mode=3
+                    play(snake_speed,mode)       
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu() 
                 #if selected_difficulty:
@@ -278,11 +308,12 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                    snake_speed = main_game.snake.get_snake_speed()
-                   play(snake_speed)
+                   play(snake_speed,0)
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     selected_difficulty = options(main_game) # Nhận giá trị snake_speed từ hàm options()
-                    if selected_difficulty:
-                        play(selected_difficulty)  # Truyền giá trị snake_speed vào hàm play() khi chọn chế độ
+                    mode=options(main_game)
+                    if selected_difficulty and mode:
+                        play(selected_difficulty,mode)  # Truyền giá trị snake_speed vào hàm play() khi chọn chế độ
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
