@@ -1,6 +1,6 @@
 import pygame,sys,random
 from pygame.math import Vector2
-
+from button import Button
 pygame.mixer.pre_init(44100,-16,2,512)
 pygame.init()
 cell_size = 40
@@ -251,9 +251,10 @@ class BLOCK:
 
 class MAIN:
 	def __init__(self,mode=0):
+		self.start=False
 		self.snake = SNAKE()
 		self.fruit = FRUIT()
-
+		self.end = False
 		self.blocked_positions=[]
 		fruit_pos=Vector2(self.fruit.x,self.fruit.y)
 		self.blocked_positions.append(fruit_pos)
@@ -265,6 +266,7 @@ class MAIN:
 		self.reverse_mushroom=False
 		self.reverse_time=0
 		self.score = 0
+		self.save_score=0
 		self.count_block=0
 		self.modechosen=mode
 		self.creat = False
@@ -426,7 +428,7 @@ class MAIN:
 
 	def check_fail(self):
 		if self.score <0 and self.snake.hit_block==True:
-			print('chết do tông vào vật cản')
+			print('chet do tong vao vat can')
 			self.snake.hit_block = False
 			self.snake.minus_block = False
 			self.reverse_mushroom=False
@@ -434,22 +436,27 @@ class MAIN:
 			self.snake.second_flash =0
 			self.snake.save_direction=Vector2(0,0)
 			self.fruit.random=True
+			self.score_board()
 			self.game_over()
 
 		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number*8//13:
-			print('chết do tông vào tường')
+			print('chet do tong vao tuong')
 			self.fruit.random=True
-			print(self.modechosen)
+			self.score_board()
 			self.game_over()
 
 		for block in self.snake.body[1:]:
-			if block == self.snake.body[0]:
+			if block == self.snake.body[0] and self.start==False:
 				self.game_over()
+			elif block==self.snake.body[0] and self.start==True:
+				self.score_board()
+				self.game_over()
+
 		
 	def game_over(self):
 		self.reset()
-  
 	def reset(self):
+		self.start=False
 		if(self.fruit.random==True):
 			self.fruit.randomize()
 			self.fruit.random=False
@@ -462,7 +469,10 @@ class MAIN:
 		self.reverse_time=0		
 		self.count_block=0
 		self.snake.reset()
-
+	def score_board(self):
+		self.save_score=self.score
+		print(self.score," ",self.save_score ,"code 475")
+		self.end=True
 	def draw_grass(self):
 		grass_color = (167,209,61)
 		for row in range(cell_number):

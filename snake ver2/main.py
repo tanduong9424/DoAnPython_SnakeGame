@@ -86,7 +86,6 @@ def play(snake_speed,mode):
                 main_game.update()
                 if(main_game.reverse_mushroom==True):
                     main_game.reverse_time+=1
-                print(main_game.reverse_mushroom , main_game.reverse_time)
                 if(main_game.reverse_time>=30):
                     main_game.reverse_mushroom=False
                     main_game.reverse_time=0
@@ -95,15 +94,19 @@ def play(snake_speed,mode):
                     if event.key == pygame.K_UP:
                         if main_game.snake.direction.y != -1:
                             main_game.snake.direction = Vector2(0,1)
+                            main_game.start=True
                     if event.key == pygame.K_RIGHT:
                         if main_game.snake.direction.x != 1:
                             main_game.snake.direction = Vector2(-1,0)
+                            main_game.start=True
                     if event.key == pygame.K_DOWN:
                         if main_game.snake.direction.y != 1:
                             main_game.snake.direction = Vector2(0,-1)
+                            main_game.start=True
                     if event.key == pygame.K_LEFT:
                         if main_game.snake.direction.x != -1:
                             main_game.snake.direction = Vector2(1,0)
+                            main_game.start=True
                     if event.key == pygame.K_p:  # Bắt pause khi phím 'p' được nhấn
                         if not paused:  # Nếu trò chơi không bị tạm dừng
                             main_game.snake.save_direction = main_game.snake.direction  # Lưu hướng hiện tại của rắn
@@ -113,21 +116,24 @@ def play(snake_speed,mode):
                     if event.key == pygame.K_UP:
                         if main_game.snake.direction.y != 1:
                             main_game.snake.direction = Vector2(0,-1)
+                            main_game.start=True
                     if event.key == pygame.K_RIGHT:
                         if main_game.snake.direction.x != -1:
                             main_game.snake.direction = Vector2(1,0)
+                            main_game.start=True
                     if event.key == pygame.K_DOWN:
                         if main_game.snake.direction.y != -1:
                             main_game.snake.direction = Vector2(0,1)
+                            main_game.start=True
                     if event.key == pygame.K_LEFT:
                         if main_game.snake.direction.x != 1:
                             main_game.snake.direction = Vector2(-1,0)
+                            main_game.start=True
                     if event.key == pygame.K_p:  # Bắt pause khi phím 'p' được nhấn
                         if not paused:  # Nếu trò chơi không bị tạm dừng
                             main_game.snake.save_direction = main_game.snake.direction  # Lưu hướng hiện tại của rắn
                         paused = not paused  # Chuyển trạng thái của biến paused
                     
-
         SCREEN.fill((175,215,70))
         main_game.draw_elements()
         
@@ -146,7 +152,15 @@ def play(snake_speed,mode):
                 paused = False  # Đặt trạng thái paused về False để tiếp tục chơi
             elif action == "QUIT":  # Nếu người dùng chọn thoát
                 return  # Thoát khỏi hàm, quay lại màn hình chính của trò chơi
-        
+        if main_game.end:
+            action = draw_end_screen(SCREEN, main_game,main_game.save_score)
+            if action == "RESET":  # Nếu người chơi chọn "New Game"
+                main_game.fruit.random=True
+                main_game.end=False
+                main_game.reset()  # Reset trò chơi
+
+            elif action == "QUIT":  # Nếu người chơi chọn "Quit"
+                return  # Thoát game
         
         pygame.display.update()
         clock.tick(FPS)
@@ -199,7 +213,50 @@ def draw_pause_screen(SCREEN, main_game):
         
         pygame.display.update()
 
-    
+
+def draw_end_screen(SCREEN, main_game,score):    
+    main_game = MAIN()
+    # Vẽ các nút reset và thoát
+    RESET_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 420), 
+                            text_input="New game", font=get_font(60), base_color="#69330f", hovering_color="#af613a")
+    QUIT_BOTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(600, 540), 
+                            text_input="Quit", font=get_font(60), base_color="#69330f", hovering_color="#af613a")     
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if RESET_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    main_game.fruit.random=True
+                    main_game.reset()  # Gọi phương thức reset của đối tượng snake trong main_game
+                    return "RESET"  # Trả về giá trị "RESET" khi người dùng chọn reset
+                elif QUIT_BOTTON.checkForInput(pygame.mouse.get_pos()):
+                    return "QUIT"  # Trả về giá trị "QUIT" khi người dùng chọn thoát
+        #SCREEN.fill((0,0,0))
+        #main_game.draw_elements()
+        SCORE_FONT = pygame.font.Font("Font/PoetsenOne-Regular.ttf", 100)
+        # print("hello",score)
+        SCORE_TEXT = SCORE_FONT.render("Score: "+format(score),True,(255,255,255),None)
+        SCORE_RECT = SCORE_TEXT.get_rect(center=(600,200))
+        # new_game_text = SCORE_FONT.render("New Game (N)", True, (255, 255, 255))
+        # new_game_rect = new_game_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 20))
+
+        # quit_text = SCORE_FONT.render("Quit (Q)", True, (255, 255, 255))
+        # quit_rect = quit_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 60))
+
+        SCREEN.blit(SCORE_TEXT, SCORE_RECT)
+        # SCREEN.blit(new_game_text, new_game_rect)
+        # SCREEN.blit(quit_text, quit_rect)
+    # Cập nhật trạng thái của các nút và vẽ lại chúng trên màn hình
+        RESET_BUTTON.changeColor(pygame.mouse.get_pos())
+        QUIT_BOTTON.changeColor(pygame.mouse.get_pos())
+        
+        RESET_BUTTON.update(SCREEN)
+        QUIT_BOTTON.update(SCREEN)
+
+        pygame.display.flip() 
+        
 def options(main_game):
     selected_difficulty = None
     mode=0
