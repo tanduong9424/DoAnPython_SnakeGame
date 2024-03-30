@@ -31,10 +31,10 @@ class SNAKE:
  		#Chỉ số tốc độ của snake
 		self.snake_speed = 3
 
-		self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
-		self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
-		self.head_right = pygame.image.load('Graphics/head_right.png').convert_alpha()
-		self.head_left = pygame.image.load('Graphics/head_left.png').convert_alpha()
+		self.head_up = pygame.image.load('Graphics/stun_head_up.png').convert_alpha()
+		self.head_down = pygame.image.load('Graphics/stun_head_down.png').convert_alpha()
+		self.head_right = pygame.image.load('Graphics/stun_head_right.png').convert_alpha()
+		self.head_left = pygame.image.load('Graphics/stun_head_left.png').convert_alpha()
 		
 		self.tail_up = pygame.image.load('Graphics/tail_up.png').convert_alpha()
 		self.tail_down = pygame.image.load('Graphics/tail_down.png').convert_alpha()
@@ -50,10 +50,10 @@ class SNAKE:
 		self.body_bl = pygame.image.load('Graphics/body_bl.png').convert_alpha()
 		self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
 # hit
-		self.head_up_hit = pygame.image.load('Graphics/head_up_hit.png').convert_alpha()
-		self.head_down_hit = pygame.image.load('Graphics/head_down_hit.png').convert_alpha()
-		self.head_right_hit = pygame.image.load('Graphics/head_right_hit.png').convert_alpha()
-		self.head_left_hit = pygame.image.load('Graphics/head_left_hit.png').convert_alpha()
+		self.head_up_hit = pygame.image.load('Graphics/stun_head_up_hit.png').convert_alpha()
+		self.head_down_hit = pygame.image.load('Graphics/stun_head_down_hit.png').convert_alpha()
+		self.head_right_hit = pygame.image.load('Graphics/stun_head_right_hit.png').convert_alpha()
+		self.head_left_hit = pygame.image.load('Graphics/stun_head_left_hit.png').convert_alpha()
 		
 		self.tail_up_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
 		self.tail_down_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
@@ -471,7 +471,6 @@ class MAIN:
 		self.snake.reset()
 	def score_board(self):
 		self.save_score=self.score
-		print(self.score," ",self.save_score ,"code 475")
 		self.end=True
 	def draw_grass(self):
 		grass_color = (167,209,61)
