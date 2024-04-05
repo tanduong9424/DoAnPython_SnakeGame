@@ -487,7 +487,7 @@ class MAIN:
 						pygame.draw.rect(screen,grass_color,grass_rect)			
 
 	def draw_score(self):
-		score_text = str(len(self.snake.body) - 3)
+		"""score_text = str(len(self.snake.body) - 3)
 		score_surface = game_font.render(score_text,True,(56,74,12))
 		
 		score_rect = score_surface.get_rect(bottomright = (score_x,score_y))
@@ -497,4 +497,19 @@ class MAIN:
 		pygame.draw.rect(screen,(167,209,61),bg_rect)
 		screen.blit(score_surface,score_rect)
 		screen.blit(apple,apple_rect)
-		pygame.draw.rect(screen,(56,74,12),bg_rect,2)
+		pygame.draw.rect(screen,(56,74,12),bg_rect,2)"""
+		score_text = str(len(self.snake.body) - 3)
+		score_surface = game_font.render("Score: " + score_text, True, (56, 74, 12))
+
+		# Đặt độ trong suốt cho chữ "Score"
+		score_surface.set_alpha(100)
+
+		score_rect = score_surface.get_rect(topright=(SCREEN_WIDTH - 10, 40))
+
+		# Vẽ chữ "Score" lên màn hình
+		screen.blit(score_surface, score_rect)
+		bg_rect = pygame.Rect(score_rect.left - 6, score_rect.top, score_rect.width + 6, score_rect.height)
+
+		pygame.draw.rect(screen, (167, 209, 61), bg_rect)
+		screen.blit(score_surface, score_rect)
+		pygame.draw.rect(screen, (56, 74, 12), bg_rect, 2)
