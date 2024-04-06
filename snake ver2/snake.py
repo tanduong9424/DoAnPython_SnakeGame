@@ -440,10 +440,18 @@ class MAIN:
 			self.game_over()
 
 		if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number*8//13:
-			print('chet do tong vao tuong')
-			self.fruit.random=True
-			self.score_board()
-			self.game_over()
+			if self.modechosen==1 or  self.modechosen==0:
+				print('chet do tong vao tuong')
+				self.fruit.random=True
+				self.score_board()
+				self.game_over()
+			else:
+				print('di xuyen vao tuong')
+				# lưu ý duyệt qua từng bộ phận chứ không phải toàn bộ
+				# nếu self.snake.body đi qua thì x==0 thì vector sẽ bằng(cell_number,y) và ngược lại
+				# nếu self.snake.body đi qua thì x==0 thì vector sẽ bằng(x,cell_number*8//13) và ngược lại
+				# chạy bên ngoài if này và xét nếu modechosen!=0,1 
+				# làm ở hàm update 
 
 		for block in self.snake.body[1:]:
 			if block == self.snake.body[0] and self.start==False:
