@@ -285,7 +285,8 @@ class MAIN:
 		if self.score>=5:
 			self.count_block=self.score//5
 			if(self.count_block>4):
-				self.count_block=4
+				if(self.modechosen==0 or self.modechosen==1):
+					self.count_block=4		
 		else:
 			self.count_block=0
 		if self.creat == True:
@@ -446,12 +447,23 @@ class MAIN:
 				self.score_board()
 				self.game_over()
 			else:
-				print('di xuyen vao tuong')
+				# print('di xuyen vao tuong')
 				# lưu ý duyệt qua từng bộ phận chứ không phải toàn bộ
 				# nếu self.snake.body đi qua thì x==0 thì vector sẽ bằng(cell_number,y) và ngược lại
 				# nếu self.snake.body đi qua thì x==0 thì vector sẽ bằng(x,cell_number*8//13) và ngược lại
 				# chạy bên ngoài if này và xét nếu modechosen!=0,1 
 				# làm ở hàm update 
+				direction=self.snake.direction
+				for i in range(len(self.snake.body)):
+					block=self.snake.body[i]
+					if(direction==Vector2(-1,0) and block.x<0):
+						block.x=cell_number-1
+					elif(direction==Vector2(1,0) and block.x>=cell_number):
+						block.x=0
+					elif(direction==Vector2(0,-1) and block.y<0):
+						block.y=cell_number*8//13 - 1
+					elif(direction==Vector2(0,1) and block.y>=cell_number*8//13):
+						block.y=0
 
 		for block in self.snake.body[1:]:
 			if block == self.snake.body[0] and self.start==False:
