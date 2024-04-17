@@ -31,10 +31,10 @@ class SNAKE:
  		#Chỉ số tốc độ của snake
 		self.snake_speed = 3
 
-		self.head_up = pygame.image.load('Graphics/stun_head_up.png').convert_alpha()
-		self.head_down = pygame.image.load('Graphics/stun_head_down.png').convert_alpha()
-		self.head_right = pygame.image.load('Graphics/stun_head_right.png').convert_alpha()
-		self.head_left = pygame.image.load('Graphics/stun_head_left.png').convert_alpha()
+		self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
+		self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
+		self.head_right = pygame.image.load('Graphics/head_right.png').convert_alpha()
+		self.head_left = pygame.image.load('Graphics/head_left.png').convert_alpha()
 		
 		self.tail_up = pygame.image.load('Graphics/tail_up.png').convert_alpha()
 		self.tail_down = pygame.image.load('Graphics/tail_down.png').convert_alpha()
@@ -50,10 +50,10 @@ class SNAKE:
 		self.body_bl = pygame.image.load('Graphics/body_bl.png').convert_alpha()
 		self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
 # hit
-		self.head_up_hit = pygame.image.load('Graphics/stun_head_up_hit.png').convert_alpha()
-		self.head_down_hit = pygame.image.load('Graphics/stun_head_down_hit.png').convert_alpha()
-		self.head_right_hit = pygame.image.load('Graphics/stun_head_right_hit.png').convert_alpha()
-		self.head_left_hit = pygame.image.load('Graphics/stun_head_left_hit.png').convert_alpha()
+		self.head_up_hit = pygame.image.load('Graphics/head_up_hit.png').convert_alpha()
+		self.head_down_hit = pygame.image.load('Graphics/head_down_hit.png').convert_alpha()
+		self.head_right_hit = pygame.image.load('Graphics/head_right_hit.png').convert_alpha()
+		self.head_left_hit = pygame.image.load('Graphics/head_left_hit.png').convert_alpha()
 		
 		self.tail_up_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
 		self.tail_down_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
@@ -67,6 +67,42 @@ class SNAKE:
 		self.body_tl_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
 		self.body_br_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
 		self.body_bl_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
+# stun
+		self.head_up_stun = pygame.image.load('Graphics/stun_head_up.png').convert_alpha()
+		self.head_down_stun = pygame.image.load('Graphics/stun_head_down.png').convert_alpha()
+		self.head_right_stun = pygame.image.load('Graphics/stun_head_right.png').convert_alpha()
+		self.head_left_stun = pygame.image.load('Graphics/stun_head_left.png').convert_alpha()
+		
+		self.tail_up_stun = pygame.image.load('Graphics/tail_up.png').convert_alpha()
+		self.tail_down_stun = pygame.image.load('Graphics/tail_down.png').convert_alpha()
+		self.tail_right_stun = pygame.image.load('Graphics/tail_right.png').convert_alpha()
+		self.tail_left_stun = pygame.image.load('Graphics/tail_left.png').convert_alpha()
+
+		self.body_vertical_stun = pygame.image.load('Graphics/body_vertical.png').convert_alpha()
+		self.body_horizontal_stun = pygame.image.load('Graphics/body_horizontal.png').convert_alpha()
+
+		self.body_tr_stun = pygame.image.load('Graphics/body_tr.png').convert_alpha()
+		self.body_tl_stun = pygame.image.load('Graphics/body_tl.png').convert_alpha()
+		self.body_br_stun = pygame.image.load('Graphics/body_br.png').convert_alpha()
+		self.body_bl_stun = pygame.image.load('Graphics/body_bl.png').convert_alpha()
+# stun hit
+		self.head_up_stun_hit = pygame.image.load('Graphics/stun_head_up_hit.png').convert_alpha()
+		self.head_down_stun_hit = pygame.image.load('Graphics/stun_head_down_hit.png').convert_alpha()
+		self.head_right_stun_hit = pygame.image.load('Graphics/stun_head_right_hit.png').convert_alpha()
+		self.head_left_stun_hit = pygame.image.load('Graphics/stun_head_left_hit.png').convert_alpha()
+		
+		self.tail_up_stun_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
+		self.tail_down_stun_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
+		self.tail_right_stun_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
+		self.tail_left_stun_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
+
+		self.body_vertical_stun_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
+		self.body_horizontal_stun_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
+
+		self.body_tr_stun_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
+		self.body_tl_stun_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
+		self.body_br_stun_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
+		self.body_bl_stun_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
 
 		
 	def draw_snake(self):
@@ -157,6 +193,93 @@ class SNAKE:
 		elif tail_relation == Vector2(0,1): self.tail = self.tail_up_hit
 		elif tail_relation == Vector2(0,-1): self.tail = self.tail_down_hit
 
+	def draw_snake_stun(self):
+		self.update_head_graphics_stun()
+		self.update_tail_graphics_stun()
+
+		for index,block in enumerate(self.body):
+			x_pos = int(block.x * cell_size)
+			y_pos = int(block.y * cell_size)
+			block_rect = pygame.Rect(x_pos,y_pos,cell_size,cell_size)
+
+			if index == 0:
+				screen.blit(self.head,block_rect)
+			elif index == len(self.body) - 1:
+				screen.blit(self.tail,block_rect)
+			else:
+				previous_block = self.body[index + 1] - block
+				next_block = self.body[index - 1] - block
+				if previous_block.x == next_block.x:
+					screen.blit(self.body_vertical_stun,block_rect)
+				elif previous_block.y == next_block.y:
+					screen.blit(self.body_horizontal_stun,block_rect)
+				else:
+					if previous_block.x == -1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == -1:
+						screen.blit(self.body_tl_stun,block_rect)
+					elif previous_block.x == -1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == -1:
+						screen.blit(self.body_bl_stun,block_rect)
+					elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
+						screen.blit(self.body_tr_stun,block_rect)
+					elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
+						screen.blit(self.body_br_stun,block_rect)
+
+	def update_head_graphics_stun(self):
+		head_relation = self.body[1] - self.body[0]
+		if head_relation == Vector2(1,0): self.head = self.head_left_stun
+		elif head_relation == Vector2(-1,0): self.head = self.head_right_stun
+		elif head_relation == Vector2(0,1): self.head = self.head_up_stun
+		elif head_relation == Vector2(0,-1): self.head = self.head_down_stun
+
+	def update_tail_graphics_stun(self):
+		tail_relation = self.body[-2] - self.body[-1]
+		if tail_relation == Vector2(1,0): self.tail = self.tail_left_stun
+		elif tail_relation == Vector2(-1,0): self.tail = self.tail_right_stun
+		elif tail_relation == Vector2(0,1): self.tail = self.tail_up_stun
+		elif tail_relation == Vector2(0,-1): self.tail = self.tail_down_stun
+
+	def draw_snake_stun_hit(self):
+		self.update_head_graphics_stun_hit()
+		self.update_tail_graphics_stun_hit()
+
+		for index,block in enumerate(self.body):
+			x_pos = int(block.x * cell_size)
+			y_pos = int(block.y * cell_size)
+			block_rect = pygame.Rect(x_pos,y_pos,cell_size,cell_size)
+
+			if index == 0:
+				screen.blit(self.head,block_rect)
+			elif index == len(self.body) - 1:
+				screen.blit(self.tail,block_rect)
+			else:
+				previous_block = self.body[index + 1] - block
+				next_block = self.body[index - 1] - block
+				if previous_block.x == next_block.x:
+					screen.blit(self.body_vertical_stun_hit,block_rect)
+				elif previous_block.y == next_block.y:
+					screen.blit(self.body_horizontal_stun_hit,block_rect)
+				else:
+					if previous_block.x == -1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == -1:
+						screen.blit(self.body_tl_stun_hit,block_rect)
+					elif previous_block.x == -1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == -1:
+						screen.blit(self.body_bl_stun_hit,block_rect)
+					elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
+						screen.blit(self.body_tr_stun_hit,block_rect)
+					elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
+						screen.blit(self.body_br_stun_hit,block_rect)
+
+	def update_head_graphics_stun_hit(self):
+		head_relation = self.body[1] - self.body[0]
+		if head_relation == Vector2(1,0): self.head = self.head_left_stun_hit
+		elif head_relation == Vector2(-1,0): self.head = self.head_right_stun_hit
+		elif head_relation == Vector2(0,1): self.head = self.head_up_stun_hit
+		elif head_relation == Vector2(0,-1): self.head = self.head_down_stun_hit
+
+	def update_tail_graphics_stun_hit(self):
+		tail_relation = self.body[-2] - self.body[-1]
+		if tail_relation == Vector2(1,0): self.tail = self.tail_left_stun_hit
+		elif tail_relation == Vector2(-1,0): self.tail = self.tail_right_stun_hit
+		elif tail_relation == Vector2(0,1): self.tail = self.tail_up_stun_hit
+		elif tail_relation == Vector2(0,-1): self.tail = self.tail_down_stun_hit
 
 	def move_snake(self):
 		if self.new_block == True:
@@ -308,14 +431,22 @@ class MAIN:
 		if(self.modechosen !=0):
 			self.mushroom.draw_fruit()
 
-		if self.snake.hit_block == True:
+		if self.snake.hit_block == True and self.reverse_mushroom==False:
 			if self.snake.second_flash <50 or self.snake.second_flash>100 and self.snake.second_flash<150:
 				self.snake.draw_snake()
 			elif  self.snake.second_flash >50 and self.snake.second_flash<101 or self.snake.second_flash>150:
 				self.snake.draw_snake_hit()
 			self.snake.second_flash +=1
-		elif self.snake.hit_block == False :
+		elif self.snake.hit_block == False and self.reverse_mushroom==False:
 			self.snake.draw_snake()
+		elif self.snake.hit_block == False and self.reverse_mushroom==True:
+			self.snake.draw_snake_stun()
+		elif self.snake.hit_block == True and self.reverse_mushroom==True:
+			if self.snake.second_flash <50 or self.snake.second_flash>100 and self.snake.second_flash<150:
+				self.snake.draw_snake()
+			elif  self.snake.second_flash >50 and self.snake.second_flash<101 or self.snake.second_flash>150:
+				self.snake.draw_snake_stun_hit()	
+			self.snake.second_flash +=1		
 		if self.snake.second_flash == 200:
 			self.snake.second_flash =0
 			self.snake.hit_block = False

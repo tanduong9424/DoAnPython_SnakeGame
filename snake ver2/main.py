@@ -86,7 +86,7 @@ def play(snake_speed,mode):
                 main_game.update()
                 if(main_game.reverse_mushroom==True):
                     main_game.reverse_time+=1
-                if(main_game.reverse_time>=30):
+                if(main_game.reverse_time>=50):
                     main_game.reverse_mushroom=False
                     main_game.reverse_time=0
             if main_game.reverse_mushroom==True:
