@@ -9,8 +9,8 @@ FPS=60
 cell_size = 40
 cell_number = 30
 
-SCREEN_WIDTH=cell_number*cell_size
-SCREEN_HEIGHT=cell_number*8//13*cell_size
+SCREEN_WIDTH=cell_number *cell_size
+SCREEN_HEIGHT=cell_number*8//13 *cell_size
 
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
@@ -22,38 +22,39 @@ BG = pygame.image.load("assets/bg.png")
 bg_width = BG.get_width()
 bg_rect = BG.get_rect()
 
+#SKIN_IMAGES = [pygame.image.load("assets/skin1.png"), pygame.image.load("assets/skin2.png"), pygame.image.load("assets/skin3.png")]
+skin_global = 0
+# def scroll_bg():
+#     scroll = 0  # Khởi tạo giá trị scroll
+#     num_tiles = math.ceil(SCREEN_WIDTH / bg_width) + 1  # Số lượng ô vuông để vẽ background
+#     buffer_width = num_tiles * bg_width - SCREEN_WIDTH  # Tính buffer width
 
-def scroll_bg():
-    scroll = 0  # Khởi tạo giá trị scroll
-    num_tiles = math.ceil(SCREEN_WIDTH / bg_width) + 1  # Số lượng ô vuông để vẽ background
-    buffer_width = num_tiles * bg_width - SCREEN_WIDTH  # Tính buffer width
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 sys.exit()
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        SCREEN.fill((175, 215, 70))  # Tô màu nền
-        screen_rect = SCREEN.get_rect()
-        screen_rect.center = (SCREEN.get_width() // 2, SCREEN.get_height() // 2)
+#         SCREEN.fill((175, 215, 70))  # Tô màu nền
+#         screen_rect = SCREEN.get_rect()
+#         screen_rect.center = (SCREEN.get_width() // 2, SCREEN.get_height() // 2)
 
 
-        # Vẽ background
-        for i in range(num_tiles):
-            # Tính toán vị trí x dựa trên scroll và rect của SCREEN
-            x_position = i * bg_width + scroll
-            SCREEN.blit(BG.convert_alpha(), (x_position, 0))
+#         # Vẽ background
+#         for i in range(num_tiles):
+#             # Tính toán vị trí x dựa trên scroll và rect của SCREEN
+#             x_position = i * bg_width + scroll
+#             SCREEN.blit(BG.convert_alpha(), (x_position, 0))
 
-        pygame.display.update()
+#         pygame.display.update()
 
-        # Cập nhật giá trị scroll để tạo hiệu ứng cuộn
-        scroll -= 1
+#         # Cập nhật giá trị scroll để tạo hiệu ứng cuộn
+#         scroll -= 1
 
-        if scroll <= -buffer_width:
-            scroll = 0
+#         if scroll <= -buffer_width:
+#             scroll = 0
 
-        pygame.time.delay(10)  # Đợi một chút để tạo hiệu ứng cuộn
+#         pygame.time.delay(10)  # Đợi một chút để tạo hiệu ứng cuộn
 
         
 
@@ -61,11 +62,10 @@ def scroll_bg():
 def get_font(size):
     return pygame.font.Font("Font/PoetsenOne-Regular.ttf", size)
 
-def play(snake_speed,mode):
-    main_game = MAIN(mode)
+def play(snake_speed,mode,skin):
+    main_game = MAIN(mode,skin)
     #paused
     paused = False
-    
     PAUSE_BUTTON = Button(image=None, pos=(1130, 20),
                           text_input="PAUSE(P)", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
     
@@ -257,7 +257,7 @@ def draw_end_screen(SCREEN, main_game,score):
 
         pygame.display.flip() 
         
-def options(main_game):
+def options(main_game,skin_global):
     selected_difficulty = None
     mode=0
     #Giao diện
@@ -303,7 +303,8 @@ def options(main_game):
         SUPER_HARD_BUTTON.update(SCREEN)
         OPTIONS_BACK.update(SCREEN)
 
-
+        #print("skin global: ",skin_global)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -313,28 +314,107 @@ def options(main_game):
                 if EASY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed()
                     mode=0
-                    play(snake_speed,mode)        
+                    play(snake_speed,mode,skin_global)        
                 elif NORMAL_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed() * 2
                     mode=1
-                    play(snake_speed,mode)        
+                    play(snake_speed,mode,skin_global)        
                 elif HARD_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed() * 3
                     mode=2
-                    play(snake_speed,mode)        
+                    play(snake_speed,mode,skin_global)        
                 elif SUPER_HARD_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     snake_speed = main_game.snake.get_snake_speed() * 4
                     mode=3
-                    play(snake_speed,mode)       
+                    play(snake_speed,mode,skin_global)       
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
-                    main_menu() 
+                    main_menu(skin_global) 
                 #if selected_difficulty:
                 #    return selected_difficulty #chuyển sang play với mức độ được chọn
 
         pygame.display.update()
+def skins(main_game):
+    skin=0
+    exited = False  # Biến để theo dõi trạng thái thoát khỏi menu Skins
+    #Giao diện
+    #frame_image = pygame.image.load("assets/Options Rect.png").convert_alpha()
+    #frame_positions = [(400, 200), (400, 320), (400, 440), (400, 560)]
+    #frame_height = frame_image.get_height()
 
-def main_menu():
+    while not exited:  # Vòng lặp sẽ chạy cho đến khi người dùng thoát khỏi menu Skins
+        SKINS_MOUSE_POS = pygame.mouse.get_pos()
+        SCREEN.blit(BG, (0, 0))  # Thêm hình nền 2
+
+        SKINS_TEXT = get_font(45).render("Choose the skin.", True, "#f5d189")
+        SKINS_RECT = SKINS_TEXT.get_rect(center=(SCREEN_WIDTH // 2, 30))
+        SCREEN.blit(SKINS_TEXT, SKINS_RECT)
+
+        SKIN0_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(200, 120),
+                            skin_image=pygame.image.load("Graphics/snake_skin_preview.png"),
+                            text_input="Snake", font=get_font(55), base_color="#69330f",
+                            hovering_color="#af613a")
+        SKIN1_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 120),
+                            skin_image=pygame.image.load("Graphics/dragon_skin_preview.png"),
+                            text_input="Dragon", font=get_font(55), base_color="#69330f",
+                            hovering_color="#af613a")
+        SKIN2_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(1000, 120),
+                            skin_image=pygame.image.load("Graphics/ant_skin_preview.png"),
+                            text_input="Ant", font=get_font(55), base_color="#69330f",
+                            hovering_color="#af613a")
+
+        SKINS_BACK = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(600, 640),
+                            text_input="Back", font=get_font(55), base_color="#69330f", hovering_color="#af613a")
+
+
+        # SKIN0_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 120),
+        #                       text_input="Choose", font=get_font(55), base_color="#69330f",
+        #                       hovering_color="#af613a")
+        # SKIN1_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 250),
+        #                       text_input="Choose", font=get_font(55), base_color="#69330f",
+        #                       hovering_color="#af613a")
+        # SKIN2_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 380),
+        #                       text_input="Choose", font=get_font(55), base_color="#69330f",
+        #                       hovering_color="#af613a")
+
+        # SKINS_BACK = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(600, 640),
+        #                     text_input="Back", font=get_font(55), base_color="#69330f", hovering_color="#af613a")
+
+        SKIN0_BUTTON.changeColor(SKINS_MOUSE_POS)
+        SKIN1_BUTTON.changeColor(SKINS_MOUSE_POS)
+        SKIN2_BUTTON.changeColor(SKINS_MOUSE_POS)
+        SKINS_BACK.changeColor(SKINS_MOUSE_POS)
+
+        SKIN0_BUTTON.update(SCREEN)
+        SKIN1_BUTTON.update(SCREEN)
+        SKIN2_BUTTON.update(SCREEN)
+        SKINS_BACK.update(SCREEN)
+
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if SKIN0_BUTTON.checkForInput(SKINS_MOUSE_POS):
+                    skin = 0
+                    exited = True  # Đặt biến exited thành True để thoát khỏi vòng lặp
+                elif SKIN1_BUTTON.checkForInput(SKINS_MOUSE_POS):
+                    skin = 1
+                    exited = True
+                elif SKIN2_BUTTON.checkForInput(SKINS_MOUSE_POS):
+                    skin = 2
+                    exited = True
+                if SKINS_BACK.checkForInput(SKINS_MOUSE_POS):
+                    exited = True
+            pygame.display.update()
+        skin_global=skin
+    # Sau khi thoát khỏi vòng lặp, trở lại menu chính
+    main_menu(skin_global)
+def main_menu(skin_global):
+    print("skin: ",skin_global)
     while True:
+
         # Vẽ hình nền fullscreen
         SCREEN.blit(pygame.transform.scale(BG, SCREEN.get_size()), (0, 0))
                 
@@ -347,13 +427,15 @@ def main_menu():
                             text_input="PLAY", font=get_font(65), base_color="#69330f", hovering_color="#af613a")
         OPTIONS_BUTTON = Button(image=pygame.image.load("assets/button3.png"), pos=(600, 390), 
                             text_input="OPTIONS", font=get_font(65), base_color="#69330f", hovering_color="#af613a")
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 530), 
+        SKINS_BUTTON = Button(image=pygame.image.load("assets/button3.png"), pos =(600,530),
+                            text_input="SKINS", font=get_font(65), base_color="#69330f", hovering_color="af613a")
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 670), 
                             text_input="QUIT", font=get_font(65), base_color="#69330f", hovering_color="#af613a")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
-            button.changeColor(MENU_MOUSE_POS)
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, SKINS_BUTTON, QUIT_BUTTON]:
+            #button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
         main_game = MAIN() #Khởi tạo đối tượng main_game từ class MAIN
@@ -365,12 +447,14 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                    snake_speed = main_game.snake.get_snake_speed()
-                   play(snake_speed,0)
+                   play(snake_speed,0,skin_global)
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    selected_difficulty = options(main_game) # Nhận giá trị snake_speed từ hàm options()
-                    mode=options(main_game)
+                    selected_difficulty = options(main_game,skin_global) # Nhận giá trị snake_speed từ hàm options()
+                    mode=options(main_game,skin_global)
                     if selected_difficulty and mode:
-                        play(selected_difficulty,mode)  # Truyền giá trị snake_speed vào hàm play() khi chọn chế độ
+                        play(selected_difficulty,mode,skin_global)  # Truyền giá trị snake_speed vào hàm play() khi chọn chế độ
+                if SKINS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    skin_global=skins(main_game)
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -378,4 +462,4 @@ def main_menu():
             pygame.display.update()
     
 #scroll_bg()
-main_menu()
+main_menu(0)

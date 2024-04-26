@@ -20,7 +20,7 @@ game_font = pygame.font.Font('Font/PoetsenOne-Regular.ttf', 25)
 
 
 class SNAKE:
-	def __init__(self):
+	def __init__(self,skin):
 		self.body = [Vector2(5,10),Vector2(4,10),Vector2(3,10)]
 		self.direction = Vector2(0,0)
 		self.new_block = False
@@ -28,82 +28,229 @@ class SNAKE:
 		self.minus_block = False
 		self.hit_block = False
 		self.second_flash=0
+		self.skin=skin
  		#Chỉ số tốc độ của snake
 		self.snake_speed = 3
 
-		self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
-		self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
-		self.head_right = pygame.image.load('Graphics/head_right.png').convert_alpha()
-		self.head_left = pygame.image.load('Graphics/head_left.png').convert_alpha()
-		
-		self.tail_up = pygame.image.load('Graphics/tail_up.png').convert_alpha()
-		self.tail_down = pygame.image.load('Graphics/tail_down.png').convert_alpha()
-		self.tail_right = pygame.image.load('Graphics/tail_right.png').convert_alpha()
-		self.tail_left = pygame.image.load('Graphics/tail_left.png').convert_alpha()
+		if self.skin==0:
+			self.head_up = pygame.image.load('Graphics/head_up.png').convert_alpha()
+			self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
+			self.head_right = pygame.image.load('Graphics/head_right.png').convert_alpha()
+			self.head_left = pygame.image.load('Graphics/head_left.png').convert_alpha()
+			
+			self.tail_up = pygame.image.load('Graphics/tail_up.png').convert_alpha()
+			self.tail_down = pygame.image.load('Graphics/tail_down.png').convert_alpha()
+			self.tail_right = pygame.image.load('Graphics/tail_right.png').convert_alpha()
+			self.tail_left = pygame.image.load('Graphics/tail_left.png').convert_alpha()
 
-		self.body_vertical = pygame.image.load('Graphics/body_vertical.png').convert_alpha()
-		self.body_horizontal = pygame.image.load('Graphics/body_horizontal.png').convert_alpha()
+			self.body_vertical = pygame.image.load('Graphics/body_vertical.png').convert_alpha()
+			self.body_horizontal = pygame.image.load('Graphics/body_horizontal.png').convert_alpha()
 
-		self.body_tr = pygame.image.load('Graphics/body_tr.png').convert_alpha()
-		self.body_tl = pygame.image.load('Graphics/body_tl.png').convert_alpha()
-		self.body_br = pygame.image.load('Graphics/body_br.png').convert_alpha()
-		self.body_bl = pygame.image.load('Graphics/body_bl.png').convert_alpha()
-		self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
-# hit
-		self.head_up_hit = pygame.image.load('Graphics/head_up_hit.png').convert_alpha()
-		self.head_down_hit = pygame.image.load('Graphics/head_down_hit.png').convert_alpha()
-		self.head_right_hit = pygame.image.load('Graphics/head_right_hit.png').convert_alpha()
-		self.head_left_hit = pygame.image.load('Graphics/head_left_hit.png').convert_alpha()
-		
-		self.tail_up_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
-		self.tail_down_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
-		self.tail_right_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
-		self.tail_left_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
+			self.body_tr = pygame.image.load('Graphics/body_tr.png').convert_alpha()
+			self.body_tl = pygame.image.load('Graphics/body_tl.png').convert_alpha()
+			self.body_br = pygame.image.load('Graphics/body_br.png').convert_alpha()
+			self.body_bl = pygame.image.load('Graphics/body_bl.png').convert_alpha()
+			self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
+	# hit
+			self.head_up_hit = pygame.image.load('Graphics/head_up_hit.png').convert_alpha()
+			self.head_down_hit = pygame.image.load('Graphics/head_down_hit.png').convert_alpha()
+			self.head_right_hit = pygame.image.load('Graphics/head_right_hit.png').convert_alpha()
+			self.head_left_hit = pygame.image.load('Graphics/head_left_hit.png').convert_alpha()
+			
+			self.tail_up_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
+			self.tail_down_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
+			self.tail_right_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
+			self.tail_left_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
 
-		self.body_vertical_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
-		self.body_horizontal_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
+			self.body_vertical_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
+			self.body_horizontal_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
 
-		self.body_tr_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
-		self.body_tl_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
-		self.body_br_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
-		self.body_bl_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
-# stun
-		self.head_up_stun = pygame.image.load('Graphics/stun_head_up.png').convert_alpha()
-		self.head_down_stun = pygame.image.load('Graphics/stun_head_down.png').convert_alpha()
-		self.head_right_stun = pygame.image.load('Graphics/stun_head_right.png').convert_alpha()
-		self.head_left_stun = pygame.image.load('Graphics/stun_head_left.png').convert_alpha()
-		
-		self.tail_up_stun = pygame.image.load('Graphics/tail_up.png').convert_alpha()
-		self.tail_down_stun = pygame.image.load('Graphics/tail_down.png').convert_alpha()
-		self.tail_right_stun = pygame.image.load('Graphics/tail_right.png').convert_alpha()
-		self.tail_left_stun = pygame.image.load('Graphics/tail_left.png').convert_alpha()
+			self.body_tr_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
+			self.body_tl_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
+			self.body_br_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
+			self.body_bl_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
+	# stun
+			self.head_up_stun = pygame.image.load('Graphics/stun_head_up.png').convert_alpha()
+			self.head_down_stun = pygame.image.load('Graphics/stun_head_down.png').convert_alpha()
+			self.head_right_stun = pygame.image.load('Graphics/stun_head_right.png').convert_alpha()
+			self.head_left_stun = pygame.image.load('Graphics/stun_head_left.png').convert_alpha()
+			
+			self.tail_up_stun = pygame.image.load('Graphics/tail_up.png').convert_alpha()
+			self.tail_down_stun = pygame.image.load('Graphics/tail_down.png').convert_alpha()
+			self.tail_right_stun = pygame.image.load('Graphics/tail_right.png').convert_alpha()
+			self.tail_left_stun = pygame.image.load('Graphics/tail_left.png').convert_alpha()
 
-		self.body_vertical_stun = pygame.image.load('Graphics/body_vertical.png').convert_alpha()
-		self.body_horizontal_stun = pygame.image.load('Graphics/body_horizontal.png').convert_alpha()
+			self.body_vertical_stun = pygame.image.load('Graphics/body_vertical.png').convert_alpha()
+			self.body_horizontal_stun = pygame.image.load('Graphics/body_horizontal.png').convert_alpha()
 
-		self.body_tr_stun = pygame.image.load('Graphics/body_tr.png').convert_alpha()
-		self.body_tl_stun = pygame.image.load('Graphics/body_tl.png').convert_alpha()
-		self.body_br_stun = pygame.image.load('Graphics/body_br.png').convert_alpha()
-		self.body_bl_stun = pygame.image.load('Graphics/body_bl.png').convert_alpha()
-# stun hit
-		self.head_up_stun_hit = pygame.image.load('Graphics/stun_head_up_hit.png').convert_alpha()
-		self.head_down_stun_hit = pygame.image.load('Graphics/stun_head_down_hit.png').convert_alpha()
-		self.head_right_stun_hit = pygame.image.load('Graphics/stun_head_right_hit.png').convert_alpha()
-		self.head_left_stun_hit = pygame.image.load('Graphics/stun_head_left_hit.png').convert_alpha()
-		
-		self.tail_up_stun_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
-		self.tail_down_stun_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
-		self.tail_right_stun_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
-		self.tail_left_stun_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
+			self.body_tr_stun = pygame.image.load('Graphics/body_tr.png').convert_alpha()
+			self.body_tl_stun = pygame.image.load('Graphics/body_tl.png').convert_alpha()
+			self.body_br_stun = pygame.image.load('Graphics/body_br.png').convert_alpha()
+			self.body_bl_stun = pygame.image.load('Graphics/body_bl.png').convert_alpha()
+	# stun hit
+			self.head_up_stun_hit = pygame.image.load('Graphics/stun_head_up_hit.png').convert_alpha()
+			self.head_down_stun_hit = pygame.image.load('Graphics/stun_head_down_hit.png').convert_alpha()
+			self.head_right_stun_hit = pygame.image.load('Graphics/stun_head_right_hit.png').convert_alpha()
+			self.head_left_stun_hit = pygame.image.load('Graphics/stun_head_left_hit.png').convert_alpha()
+			
+			self.tail_up_stun_hit = pygame.image.load('Graphics/tail_up_hit.png').convert_alpha()
+			self.tail_down_stun_hit = pygame.image.load('Graphics/tail_down_hit.png').convert_alpha()
+			self.tail_right_stun_hit = pygame.image.load('Graphics/tail_right_hit.png').convert_alpha()
+			self.tail_left_stun_hit = pygame.image.load('Graphics/tail_left_hit.png').convert_alpha()
 
-		self.body_vertical_stun_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
-		self.body_horizontal_stun_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
+			self.body_vertical_stun_hit = pygame.image.load('Graphics/body_vertical_hit.png').convert_alpha()
+			self.body_horizontal_stun_hit = pygame.image.load('Graphics/body_horizontal_hit.png').convert_alpha()
 
-		self.body_tr_stun_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
-		self.body_tl_stun_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
-		self.body_br_stun_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
-		self.body_bl_stun_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
+			self.body_tr_stun_hit = pygame.image.load('Graphics/body_tr_hit.png').convert_alpha()
+			self.body_tl_stun_hit = pygame.image.load('Graphics/body_tl_hit.png').convert_alpha()
+			self.body_br_stun_hit = pygame.image.load('Graphics/body_br_hit.png').convert_alpha()
+			self.body_bl_stun_hit = pygame.image.load('Graphics/body_bl_hit.png').convert_alpha()
+		elif self.skin==1:
+			self.head_up = pygame.image.load('Graphics/dragon_head_up.png').convert_alpha()
+			self.head_down = pygame.image.load('Graphics/dragon_head_down.png').convert_alpha()
+			self.head_right = pygame.image.load('Graphics/dragon_head_right.png').convert_alpha()
+			self.head_left = pygame.image.load('Graphics/dragon_head_left.png').convert_alpha()
+			
+			self.tail_up = pygame.image.load('Graphics/dragon_tail_up.png').convert_alpha()
+			self.tail_down = pygame.image.load('Graphics/dragon_tail_down.png').convert_alpha()
+			self.tail_right = pygame.image.load('Graphics/dragon_tail_right.png').convert_alpha()
+			self.tail_left = pygame.image.load('Graphics/dragon_tail_left.png').convert_alpha()
 
+			self.body_vertical = pygame.image.load('Graphics/dragon_body_vertical.png').convert_alpha()
+			self.body_horizontal = pygame.image.load('Graphics/dragon_body_horizontal.png').convert_alpha()
+
+			self.body_tr = pygame.image.load('Graphics/dragon_body_tr.png').convert_alpha()
+			self.body_tl = pygame.image.load('Graphics/dragon_body_tl.png').convert_alpha()
+			self.body_br = pygame.image.load('Graphics/dragon_body_br.png').convert_alpha()
+			self.body_bl = pygame.image.load('Graphics/dragon_body_bl.png').convert_alpha()
+			self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
+	# hit
+			self.head_up_hit = pygame.image.load('Graphics/dragon_head_up_hit.png').convert_alpha()
+			self.head_down_hit = pygame.image.load('Graphics/dragon_head_down_hit.png').convert_alpha()
+			self.head_right_hit = pygame.image.load('Graphics/dragon_head_right_hit.png').convert_alpha()
+			self.head_left_hit = pygame.image.load('Graphics/dragon_head_left_hit.png').convert_alpha()
+			
+			self.tail_up_hit = pygame.image.load('Graphics/dragon_tail_up_hit.png').convert_alpha()
+			self.tail_down_hit = pygame.image.load('Graphics/dragon_tail_down_hit.png').convert_alpha()
+			self.tail_right_hit = pygame.image.load('Graphics/dragon_tail_right_hit.png').convert_alpha()
+			self.tail_left_hit = pygame.image.load('Graphics/dragon_tail_left_hit.png').convert_alpha()
+
+			self.body_vertical_hit = pygame.image.load('Graphics/dragon_body_vertical_hit.png').convert_alpha()
+			self.body_horizontal_hit = pygame.image.load('Graphics/dragon_body_horizontal_hit.png').convert_alpha()
+
+			self.body_tr_hit = pygame.image.load('Graphics/dragon_body_tr_hit.png').convert_alpha()
+			self.body_tl_hit = pygame.image.load('Graphics/dragon_body_tl_hit.png').convert_alpha()
+			self.body_br_hit = pygame.image.load('Graphics/dragon_body_br_hit.png').convert_alpha()
+			self.body_bl_hit = pygame.image.load('Graphics/dragon_body_bl_hit.png').convert_alpha()
+	# stun
+			self.head_up_stun = pygame.image.load('Graphics/stun_dragon_head_up.png').convert_alpha()
+			self.head_down_stun = pygame.image.load('Graphics/stun_dragon_head_down.png').convert_alpha()
+			self.head_right_stun = pygame.image.load('Graphics/stun_dragon_head_right.png').convert_alpha()
+			self.head_left_stun = pygame.image.load('Graphics/stun_dragon_head_left.png').convert_alpha()
+			
+			self.tail_up_stun = pygame.image.load('Graphics/dragon_tail_up.png').convert_alpha()
+			self.tail_down_stun = pygame.image.load('Graphics/dragon_tail_down.png').convert_alpha()
+			self.tail_right_stun = pygame.image.load('Graphics/dragon_tail_right.png').convert_alpha()
+			self.tail_left_stun = pygame.image.load('Graphics/dragon_tail_left.png').convert_alpha()
+
+			self.body_vertical_stun = pygame.image.load('Graphics/dragon_body_vertical.png').convert_alpha()
+			self.body_horizontal_stun = pygame.image.load('Graphics/dragon_body_horizontal.png').convert_alpha()
+
+			self.body_tr_stun = pygame.image.load('Graphics/dragon_body_tr.png').convert_alpha()
+			self.body_tl_stun = pygame.image.load('Graphics/dragon_body_tl.png').convert_alpha()
+			self.body_br_stun = pygame.image.load('Graphics/dragon_body_br.png').convert_alpha()
+			self.body_bl_stun = pygame.image.load('Graphics/dragon_body_bl.png').convert_alpha()
+	# stun hit
+			self.head_up_stun_hit = pygame.image.load('Graphics/stun_dragon_head_up_hit.png').convert_alpha()
+			self.head_down_stun_hit = pygame.image.load('Graphics/stun_dragon_head_down_hit.png').convert_alpha()
+			self.head_right_stun_hit = pygame.image.load('Graphics/stun_dragon_head_right_hit.png').convert_alpha()
+			self.head_left_stun_hit = pygame.image.load('Graphics/stun_dragon_head_left_hit.png').convert_alpha()
+			
+			self.tail_up_stun_hit = pygame.image.load('Graphics/dragon_tail_up_hit.png').convert_alpha()
+			self.tail_down_stun_hit = pygame.image.load('Graphics/dragon_tail_down_hit.png').convert_alpha()
+			self.tail_right_stun_hit = pygame.image.load('Graphics/dragon_tail_right_hit.png').convert_alpha()
+			self.tail_left_stun_hit = pygame.image.load('Graphics/dragon_tail_left_hit.png').convert_alpha()
+
+			self.body_vertical_stun_hit = pygame.image.load('Graphics/dragon_body_vertical_hit.png').convert_alpha()
+			self.body_horizontal_stun_hit = pygame.image.load('Graphics/dragon_body_horizontal_hit.png').convert_alpha()
+
+			self.body_tr_stun_hit = pygame.image.load('Graphics/dragon_body_tr_hit.png').convert_alpha()
+			self.body_tl_stun_hit = pygame.image.load('Graphics/dragon_body_tl_hit.png').convert_alpha()
+			self.body_br_stun_hit = pygame.image.load('Graphics/dragon_body_br_hit.png').convert_alpha()
+			self.body_bl_stun_hit = pygame.image.load('Graphics/dragon_body_bl_hit.png').convert_alpha()
+		elif self.skin==2:
+			self.head_up = pygame.image.load('Graphics/ant_head_up.png').convert_alpha()
+			self.head_down = pygame.image.load('Graphics/ant_head_down.png').convert_alpha()
+			self.head_right = pygame.image.load('Graphics/ant_head_right.png').convert_alpha()
+			self.head_left = pygame.image.load('Graphics/ant_head_left.png').convert_alpha()
+			
+			self.tail_up = pygame.image.load('Graphics/ant_tail_up.png').convert_alpha()
+			self.tail_down = pygame.image.load('Graphics/ant_tail_down.png').convert_alpha()
+			self.tail_right = pygame.image.load('Graphics/ant_tail_right.png').convert_alpha()
+			self.tail_left = pygame.image.load('Graphics/ant_tail_left.png').convert_alpha()
+
+			self.body_vertical = pygame.image.load('Graphics/ant_body_vertical.png').convert_alpha()
+			self.body_horizontal = pygame.image.load('Graphics/ant_body_horizontal.png').convert_alpha()
+
+			self.body_tr = pygame.image.load('Graphics/ant_body_tr.png').convert_alpha()
+			self.body_tl = pygame.image.load('Graphics/ant_body_tl.png').convert_alpha()
+			self.body_br = pygame.image.load('Graphics/ant_body_br.png').convert_alpha()
+			self.body_bl = pygame.image.load('Graphics/ant_body_bl.png').convert_alpha()
+			self.crunch_sound = pygame.mixer.Sound('Sound/crunch.wav')
+	# hit
+			self.head_up_hit = pygame.image.load('Graphics/ant_head_up_hit.png').convert_alpha()
+			self.head_down_hit = pygame.image.load('Graphics/ant_head_down_hit.png').convert_alpha()
+			self.head_right_hit = pygame.image.load('Graphics/ant_head_right_hit.png').convert_alpha()
+			self.head_left_hit = pygame.image.load('Graphics/ant_head_left_hit.png').convert_alpha()
+			
+			self.tail_up_hit = pygame.image.load('Graphics/ant_tail_up_hit.png').convert_alpha()
+			self.tail_down_hit = pygame.image.load('Graphics/ant_tail_down_hit.png').convert_alpha()
+			self.tail_right_hit = pygame.image.load('Graphics/ant_tail_right_hit.png').convert_alpha()
+			self.tail_left_hit = pygame.image.load('Graphics/ant_tail_left_hit.png').convert_alpha()
+
+			self.body_vertical_hit = pygame.image.load('Graphics/ant_body_vertical_hit.png').convert_alpha()
+			self.body_horizontal_hit = pygame.image.load('Graphics/ant_body_horizontal_hit.png').convert_alpha()
+
+			self.body_tr_hit = pygame.image.load('Graphics/ant_body_tr_hit.png').convert_alpha()
+			self.body_tl_hit = pygame.image.load('Graphics/ant_body_tl_hit.png').convert_alpha()
+			self.body_br_hit = pygame.image.load('Graphics/ant_body_br_hit.png').convert_alpha()
+			self.body_bl_hit = pygame.image.load('Graphics/ant_body_bl_hit.png').convert_alpha()
+	# stun
+			self.head_up_stun = pygame.image.load('Graphics/stun_ant_head_up.png').convert_alpha()
+			self.head_down_stun = pygame.image.load('Graphics/stun_ant_head_down.png').convert_alpha()
+			self.head_right_stun = pygame.image.load('Graphics/stun_ant_head_right.png').convert_alpha()
+			self.head_left_stun = pygame.image.load('Graphics/stun_ant_head_left.png').convert_alpha()
+			
+			self.tail_up_stun = pygame.image.load('Graphics/ant_tail_up.png').convert_alpha()
+			self.tail_down_stun = pygame.image.load('Graphics/ant_tail_down.png').convert_alpha()
+			self.tail_right_stun = pygame.image.load('Graphics/ant_tail_right.png').convert_alpha()
+			self.tail_left_stun = pygame.image.load('Graphics/ant_tail_left.png').convert_alpha()
+
+			self.body_vertical_stun = pygame.image.load('Graphics/ant_body_vertical.png').convert_alpha()
+			self.body_horizontal_stun = pygame.image.load('Graphics/ant_body_horizontal.png').convert_alpha()
+
+			self.body_tr_stun = pygame.image.load('Graphics/ant_body_tr.png').convert_alpha()
+			self.body_tl_stun = pygame.image.load('Graphics/ant_body_tl.png').convert_alpha()
+			self.body_br_stun = pygame.image.load('Graphics/ant_body_br.png').convert_alpha()
+			self.body_bl_stun = pygame.image.load('Graphics/ant_body_bl.png').convert_alpha()
+	# stun hit
+			self.head_up_stun_hit = pygame.image.load('Graphics/stun_ant_head_up_hit.png').convert_alpha()
+			self.head_down_stun_hit = pygame.image.load('Graphics/stun_ant_head_down_hit.png').convert_alpha()
+			self.head_right_stun_hit = pygame.image.load('Graphics/stun_ant_head_right_hit.png').convert_alpha()
+			self.head_left_stun_hit = pygame.image.load('Graphics/stun_ant_head_left_hit.png').convert_alpha()
+			
+			self.tail_up_stun_hit = pygame.image.load('Graphics/ant_tail_up_hit.png').convert_alpha()
+			self.tail_down_stun_hit = pygame.image.load('Graphics/ant_tail_down_hit.png').convert_alpha()
+			self.tail_right_stun_hit = pygame.image.load('Graphics/ant_tail_right_hit.png').convert_alpha()
+			self.tail_left_stun_hit = pygame.image.load('Graphics/ant_tail_left_hit.png').convert_alpha()
+
+			self.body_vertical_stun_hit = pygame.image.load('Graphics/ant_body_vertical_hit.png').convert_alpha()
+			self.body_horizontal_stun_hit = pygame.image.load('Graphics/ant_body_horizontal_hit.png').convert_alpha()
+
+			self.body_tr_stun_hit = pygame.image.load('Graphics/ant_body_tr_hit.png').convert_alpha()
+			self.body_tl_stun_hit = pygame.image.load('Graphics/ant_body_tl_hit.png').convert_alpha()
+			self.body_br_stun_hit = pygame.image.load('Graphics/ant_body_br_hit.png').convert_alpha()
+			self.body_bl_stun_hit = pygame.image.load('Graphics/ant_body_bl_hit.png').convert_alpha()
 		
 	def draw_snake(self):
 		self.update_head_graphics()
@@ -373,16 +520,15 @@ class BLOCK:
         self.pos = Vector2(self.x, self.y)
 
 class MAIN:
-	def __init__(self,mode=0):
+	def __init__(self,mode=0,skin=0):
 		self.start=False
-		self.snake = SNAKE()
+		self.snake = SNAKE(skin)
 		self.fruit = FRUIT()
 		self.end = False
 		self.blocked_positions=[]
 		fruit_pos=Vector2(self.fruit.x,self.fruit.y)
 		self.blocked_positions.append(fruit_pos)
 		self.block = []
-
 		if(mode !=0):
 			self.mushroom = Reverse(self.blocked_positions)
 
@@ -457,7 +603,6 @@ class MAIN:
 				block.draw_block()
 		
 		self.draw_score()
-
 
 	def check_collision(self):
 # fruit
@@ -577,24 +722,24 @@ class MAIN:
 				self.fruit.random=True
 				self.score_board()
 				self.game_over()
-			else:
+				# or  self.modechosen==0
 				# print('di xuyen vao tuong')
 				# lưu ý duyệt qua từng bộ phận chứ không phải toàn bộ
 				# nếu self.snake.body đi qua thì x==0 thì vector sẽ bằng(cell_number,y) và ngược lại
 				# nếu self.snake.body đi qua thì x==0 thì vector sẽ bằng(x,cell_number*8//13) và ngược lại
 				# chạy bên ngoài if này và xét nếu modechosen!=0,1 
 				# làm ở hàm update 
-				direction=self.snake.direction
-				for i in range(len(self.snake.body)):
-					block=self.snake.body[i]
-					if(direction==Vector2(-1,0) and block.x<0):
-						block.x=cell_number-1
-					elif(direction==Vector2(1,0) and block.x>=cell_number):
-						block.x=0
-					elif(direction==Vector2(0,-1) and block.y<0):
-						block.y=cell_number*8//13 - 1
-					elif(direction==Vector2(0,1) and block.y>=cell_number*8//13):
-						block.y=0
+		direction=self.snake.direction
+		for i in range(len(self.snake.body)):
+			block=self.snake.body[i]
+			if(direction==Vector2(-1,0) and block.x<0):
+				block.x=cell_number
+			elif(direction==Vector2(1,0) and block.x>=cell_number):
+				block.x=-1
+			elif(direction==Vector2(0,-1) and block.y<0):
+				block.y=cell_number*8//13 
+			elif(direction==Vector2(0,1) and block.y>=cell_number*8//13):
+				block.y=-1
 
 		for block in self.snake.body[1:]:
 			if block == self.snake.body[0] and self.start==False:
