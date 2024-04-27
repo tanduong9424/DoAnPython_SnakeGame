@@ -703,6 +703,8 @@ class MAIN:
 			self.blocked_positions.append(block_pos)
 			self.block.append(block_pos)		
 
+
+	
 	def check_fail(self):
 		if self.score <0 and self.snake.hit_block==True:
 			print('chet do tong vao vat can')
@@ -733,13 +735,17 @@ class MAIN:
 		for i in range(len(self.snake.body)):
 			block=self.snake.body[i]
 			if(direction==Vector2(-1,0) and block.x<0):
-				block.x=cell_number
+				block.x=cell_number-1
+				self.check_collision()
 			elif(direction==Vector2(1,0) and block.x>=cell_number):
-				block.x=-1
+				block.x=0
+				self.check_collision()
 			elif(direction==Vector2(0,-1) and block.y<0):
-				block.y=cell_number*8//13 
+				block.y=cell_number*8//13-1
+				self.check_collision()
 			elif(direction==Vector2(0,1) and block.y>=cell_number*8//13):
-				block.y=-1
+				block.y=0
+				self.check_collision()
 
 		for block in self.snake.body[1:]:
 			if block == self.snake.body[0] and self.start==False:
