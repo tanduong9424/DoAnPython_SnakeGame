@@ -360,14 +360,14 @@ def main_menu(skin_global):
         OPTIONS_BUTTON = Button(image=pygame.image.load("assets/button3.png"), pos=(600, 390), 
                             text_input="OPTIONS", font=get_font(65), base_color="#69330f", hovering_color="#af613a")
         SKINS_BUTTON = Button(image=pygame.image.load("assets/button3.png"), pos =(600,530),
-                            text_input="SKINS", font=get_font(65), base_color="#69330f", hovering_color="af613a")
+                            text_input="SKINS", font=get_font(65), base_color="#69330f", hovering_color="#af613a")
         QUIT_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 670), 
                             text_input="QUIT", font=get_font(65), base_color="#69330f", hovering_color="#af613a")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, SKINS_BUTTON, QUIT_BUTTON]:
-            #button.changeColor(MENU_MOUSE_POS)
+            button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
         main_game = MAIN() #Khởi tạo đối tượng main_game từ class MAIN
