@@ -24,40 +24,6 @@ bg_rect = BG.get_rect()
 
 #SKIN_IMAGES = [pygame.image.load("assets/skin1.png"), pygame.image.load("assets/skin2.png"), pygame.image.load("assets/skin3.png")]
 skin_global = 0
-# def scroll_bg():
-#     scroll = 0  # Khởi tạo giá trị scroll
-#     num_tiles = math.ceil(SCREEN_WIDTH / bg_width) + 1  # Số lượng ô vuông để vẽ background
-#     buffer_width = num_tiles * bg_width - SCREEN_WIDTH  # Tính buffer width
-
-#     while True:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-
-#         SCREEN.fill((175, 215, 70))  # Tô màu nền
-#         screen_rect = SCREEN.get_rect()
-#         screen_rect.center = (SCREEN.get_width() // 2, SCREEN.get_height() // 2)
-
-
-#         # Vẽ background
-#         for i in range(num_tiles):
-#             # Tính toán vị trí x dựa trên scroll và rect của SCREEN
-#             x_position = i * bg_width + scroll
-#             SCREEN.blit(BG.convert_alpha(), (x_position, 0))
-
-#         pygame.display.update()
-
-#         # Cập nhật giá trị scroll để tạo hiệu ứng cuộn
-#         scroll -= 1
-
-#         if scroll <= -buffer_width:
-#             scroll = 0
-
-#         pygame.time.delay(10)  # Đợi một chút để tạo hiệu ứng cuộn
-
-        
-
 
 def get_font(size):
     return pygame.font.Font("Font/PoetsenOne-Regular.ttf", size)
@@ -194,7 +160,6 @@ def draw_pause_screen(SCREEN, main_game):
                     return "QUIT"  # Trả về giá trị "QUIT" khi người dùng chọn thoát
 
         SCREEN.fill((175,215,70))
-        main_game.draw_elements()  # Vẽ các phần khác của trò chơi
         
         PAUSED_FONT = pygame.font.Font("Font/PoetsenOne-Regular.ttf", 100)
         PAUSED_TEXT = PAUSED_FONT.render("Paused", True, (255, 255, 255))
@@ -233,21 +198,14 @@ def draw_end_screen(SCREEN, main_game,score):
                     return "RESET"  # Trả về giá trị "RESET" khi người dùng chọn reset
                 elif QUIT_BOTTON.checkForInput(pygame.mouse.get_pos()):
                     return "QUIT"  # Trả về giá trị "QUIT" khi người dùng chọn thoát
-        #SCREEN.fill((0,0,0))
-        #main_game.draw_elements()
+      
         SCORE_FONT = pygame.font.Font("Font/PoetsenOne-Regular.ttf", 100)
         # print("hello",score)
         SCORE_TEXT = SCORE_FONT.render("Score: "+format(score),True,(255,255,255),None)
         SCORE_RECT = SCORE_TEXT.get_rect(center=(600,200))
-        # new_game_text = SCORE_FONT.render("New Game (N)", True, (255, 255, 255))
-        # new_game_rect = new_game_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 20))
-
-        # quit_text = SCORE_FONT.render("Quit (Q)", True, (255, 255, 255))
-        # quit_rect = quit_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 60))
 
         SCREEN.blit(SCORE_TEXT, SCORE_RECT)
-        # SCREEN.blit(new_game_text, new_game_rect)
-        # SCREEN.blit(quit_text, quit_rect)
+      
     # Cập nhật trạng thái của các nút và vẽ lại chúng trên màn hình
         RESET_BUTTON.changeColor(pygame.mouse.get_pos())
         QUIT_BOTTON.changeColor(pygame.mouse.get_pos())
@@ -260,11 +218,7 @@ def draw_end_screen(SCREEN, main_game,score):
 def options(main_game,skin_global):
     selected_difficulty = None
     mode=0
-    #Giao diện
-    #frame_image = pygame.image.load("assets/Options Rect.png").convert_alpha()
-    #frame_positions = [(400, 200), (400, 320), (400, 440), (400, 560)]
-    #frame_height = frame_image.get_height()
-
+   
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -286,10 +240,6 @@ def options(main_game,skin_global):
         
         OPTIONS_BACK=Button(image=pygame.image.load("assets/Play Rect.png"), pos=(600, 640),
                              text_input="Back", font=get_font(55), base_color="#69330f", hovering_color="#af613a")
-        #Giao diện
-        #frame_rects = [pygame.Rect((pos[0] - frame_image.get_width() / 2, pos[1] - frame_height / 2), (frame_image.get_width(), frame_height)) for pos in frame_positions]
-        #for rect in frame_rects:
-           # SCREEN.blit(frame_image, rect.topleft)
         
         EASY_BUTTON.changeColor(OPTIONS_MOUSE_POS)
         NORMAL_BUTTON.changeColor(OPTIONS_MOUSE_POS)
@@ -303,7 +253,6 @@ def options(main_game,skin_global):
         SUPER_HARD_BUTTON.update(SCREEN)
         OPTIONS_BACK.update(SCREEN)
 
-        #print("skin global: ",skin_global)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -336,10 +285,7 @@ def options(main_game,skin_global):
 def skins(main_game):
     skin=0
     exited = False  # Biến để theo dõi trạng thái thoát khỏi menu Skins
-    #Giao diện
-    #frame_image = pygame.image.load("assets/Options Rect.png").convert_alpha()
-    #frame_positions = [(400, 200), (400, 320), (400, 440), (400, 560)]
-    #frame_height = frame_image.get_height()
+
 
     while not exited:  # Vòng lặp sẽ chạy cho đến khi người dùng thoát khỏi menu Skins
         SKINS_MOUSE_POS = pygame.mouse.get_pos()
@@ -364,20 +310,6 @@ def skins(main_game):
 
         SKINS_BACK = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(600, 640),
                             text_input="Back", font=get_font(55), base_color="#69330f", hovering_color="#af613a")
-
-
-        # SKIN0_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 120),
-        #                       text_input="Choose", font=get_font(55), base_color="#69330f",
-        #                       hovering_color="#af613a")
-        # SKIN1_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 250),
-        #                       text_input="Choose", font=get_font(55), base_color="#69330f",
-        #                       hovering_color="#af613a")
-        # SKIN2_BUTTON = Button(image=pygame.image.load("assets/button2.png"), pos=(600, 380),
-        #                       text_input="Choose", font=get_font(55), base_color="#69330f",
-        #                       hovering_color="#af613a")
-
-        # SKINS_BACK = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(600, 640),
-        #                     text_input="Back", font=get_font(55), base_color="#69330f", hovering_color="#af613a")
 
         SKIN0_BUTTON.changeColor(SKINS_MOUSE_POS)
         SKIN1_BUTTON.changeColor(SKINS_MOUSE_POS)
@@ -461,5 +393,4 @@ def main_menu(skin_global):
 
             pygame.display.update()
     
-#scroll_bg()
 main_menu(0)

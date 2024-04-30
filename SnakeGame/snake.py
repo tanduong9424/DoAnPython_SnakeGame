@@ -8,16 +8,12 @@ cell_number = 30
 
 SCREEN_WIDTH=cell_number*cell_size
 SCREEN_HEIGHT=cell_number*8//13*cell_size
-score_x = int(cell_size * cell_number - 60)#lưu lại tọa độ bảng score để spwan tránh nó ra
-score_y = int(cell_size * cell_number*8//13 - 40)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
 apple = pygame.image.load('Graphics/apple.png').convert_alpha()
 mushroom=pygame.image.load('Graphics/mushroom2.png').convert_alpha()
 game_font = pygame.font.Font('Font/PoetsenOne-Regular.ttf', 25)
-
-
 
 class SNAKE:
 	def __init__(self,skin):
@@ -478,9 +474,6 @@ class FRUIT:
 	def randomize(self):
 		self.x = random.randint(0,cell_number - 1)
 		self.y = random.randint(0,cell_number*8//13 - 1)
-		while self.x==score_x or self.y==score_y :#tránh spwan lên cái bảng điểm
-			self.x = random.randint(0,cell_number - 1)
-			self.y = random.randint(0,cell_number*8//13 - 1)
 		self.pos = Vector2(self.x,self.y)
 
 # Fruit reverse
@@ -495,7 +488,7 @@ class Reverse(FRUIT):
 	def randomize(self,blocked_position=[]):
 		self.x = random.randint(0,cell_number-1)
 		self.y = random.randint(0, cell_number*8//13 -1)
-		while (Vector2(self.x,self.y) in blocked_position) and (self.x == score_x or self.y == score_y):
+		while (Vector2(self.x,self.y) in blocked_position) :
 			self.x = random.randint(0,cell_number-1)
 			self.y - random.randint(0, cell_number*8//13 -1)
 		self.pos = Vector2(self.x,self.y)
@@ -514,7 +507,7 @@ class BLOCK:
         self.y = random.randint(0, cell_number*8//13 - 1)
         
         # Kiểm tra xem vị trí mới của BLOCK có trùng với FRUIT không
-        while (Vector2(self.x, self.y) in blocked_positions) and (self.x == score_x or self.y == score_y):
+        while (Vector2(self.x, self.y) in blocked_positions):
             self.x = random.randint(0, cell_number - 1)
             self.y = random.randint(0, cell_number*8//13 - 1)
         self.pos = Vector2(self.x, self.y)
@@ -643,7 +636,6 @@ class MAIN:
 				self.mushroom.randomize(self.blocked_positions)
 # block
 		for i in range(0,len(self.block)):
-			# print("i",i," block",self.block[i], " len()",len(self.block), " snake",self.snake.body[0])
 			if self.block[i] == self.snake.body[0]:
 				self.fruit.randomize()
 
@@ -789,17 +781,6 @@ class MAIN:
 						pygame.draw.rect(screen,grass_color,grass_rect)			
 
 	def draw_score(self):
-		"""score_text = str(len(self.snake.body) - 3)
-		score_surface = game_font.render(score_text,True,(56,74,12))
-		
-		score_rect = score_surface.get_rect(bottomright = (score_x,score_y))
-		apple_rect = apple.get_rect(midright = (score_rect.left,score_rect.centery))
-		bg_rect = pygame.Rect(apple_rect.left,apple_rect.top,apple_rect.width + score_rect.width + 6,apple_rect.height)
-
-		pygame.draw.rect(screen,(167,209,61),bg_rect)
-		screen.blit(score_surface,score_rect)
-		screen.blit(apple,apple_rect)
-		pygame.draw.rect(screen,(56,74,12),bg_rect,2)"""
 		score_text = str(len(self.snake.body) - 3)
 		score_surface = game_font.render("Score: " + score_text, True, (56, 74, 12))
 
