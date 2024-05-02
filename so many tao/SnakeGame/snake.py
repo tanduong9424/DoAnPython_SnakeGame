@@ -471,9 +471,12 @@ class FRUIT:
 		screen.blit(apple,fruit_rect)
 		#pygame.draw.rect(screen,(126,166,114),fruit_rect)
 
-	def randomize(self):
-		self.x = random.randint(0,cell_number - 1)
-		self.y = random.randint(0,cell_number*8//13 - 1)
+	def randomize(self,blocked_position=[],tao=[]):
+		self.x = random.randint(0,cell_number-1)
+		self.y = random.randint(0, cell_number*8//13 -1)
+		while (Vector2(self.x,self.y) in blocked_position) or (Vector2(self.x,self.y) in tao):
+			self.x = random.randint(0,cell_number-1)
+			self.y - random.randint(0, cell_number*8//13 -1)
 		self.pos = Vector2(self.x,self.y)
 
 # Fruit reverse
@@ -485,10 +488,10 @@ class Reverse(FRUIT):
 	def draw_fruit(self):
 		fruit_rect = pygame.Rect(int(self.pos.x * cell_size),int(self.pos.y * cell_size),cell_size,cell_size)
 		screen.blit(mushroom,fruit_rect)
-	def randomize(self,blocked_position=[]):
+	def randomize(self,blocked_position=[],tao=[]):
 		self.x = random.randint(0,cell_number-1)
 		self.y = random.randint(0, cell_number*8//13 -1)
-		while (Vector2(self.x,self.y) in blocked_position) :
+		while (Vector2(self.x,self.y) in blocked_position) or (Vector2(self.x,self.y) in tao):
 			self.x = random.randint(0,cell_number-1)
 			self.y - random.randint(0, cell_number*8//13 -1)
 		self.pos = Vector2(self.x,self.y)
@@ -533,7 +536,7 @@ class BLOCK_FRUIT:
 class MAIN:
 	def __init__(self,mode=0,skin=0):
 		self.start=False
-		self.number_of_fruits_to_spawn=5;
+		self.number_of_fruits_to_spawn=4
 		self.snake = SNAKE(skin)
 		self.fruit = FRUIT()
 		self.end = False
@@ -617,7 +620,7 @@ class MAIN:
 				block.draw_block()
 		if(self.randomized==True):
 			self.randomize(self.number_of_fruits_to_spawn)
-		for i in range(0,len(self.block)):
+		for i in range(0,len(self.tao)):
 			pos_block=self.tao[i]
 			block_fruit=BLOCK_FRUIT(pos_block)
 			block_fruit.draw_block()
@@ -625,7 +628,7 @@ class MAIN:
 		self.draw_score()
 
 	def check_collision(self):
-# fruit
+		# fruit
 		if self.fruit.pos == self.snake.body[0] :
 			self.randomized=True
 			self.fruit.randomize()
@@ -692,7 +695,7 @@ class MAIN:
 			if self.mushroom.pos == self.snake.body[0]:	
 				self.reverse_mushroom=True
 				self.reverse_time=0
-				self.mushroom.randomize(self.blocked_positions)
+				self.mushroom.randomize(self.blocked_positions,self.tao)
 # block
 		for i in range(0,len(self.block)):
 			if self.block[i] == self.snake.body[0]:
@@ -741,13 +744,31 @@ class MAIN:
 						self.blocked_positions.append(pos_mushroom)	
 					self.creat = True
 					break
+			for i in range(0,len(self.tao)):
+				if block == self.tao[i]:
+					print('có chạy')
+					self.blocked_positions.clear()
+					self.block.clear()
+					self.randomize(self.number_of_fruits_to_spawn)
+					pos_fruit=Vector2(self.fruit.x,self.fruit.y)
+					pos_snake=Vector2(self.snake.body[0].x,self.snake.body[0].y)
+					pos_distance=[Vector2(2,0),Vector2(2,2),Vector2(0,2),Vector2(1,0),Vector2(1,1),Vector2(0,1),]
+					for i in range(0,6):
+						pos_temp=pos_distance[i]+pos_snake
+						self.blocked_positions.append(pos_temp)
+					self.blocked_positions.append(pos_fruit)
+					if self.modechosen!=0:
+						pos_mushroom=Vector2(self.mushroom.x,self.mushroom.y)
+						self.blocked_positions.append(pos_mushroom)	
+					self.creat = True
+					break				
 
 
 	def create_new_block(self):
 			block_x=random.randint(0,cell_number-1)
 			block_y=random.randint(0,cell_number*8//13-1)	
 			block_pos=Vector2(block_x,block_y)
-			while block_pos  in self.blocked_positions:
+			while block_pos  in self.blocked_positions or block_pos  in self.tao:
 				block_x=random.randint(0,cell_number-1)
 				block_y=random.randint(0,cell_number*8//13-1)	
 				block_pos=Vector2(block_x,block_y)				
@@ -805,9 +826,10 @@ class MAIN:
 		# 		self.score_board()
 		# 		self.game_over()
 	def randomize(self,number_of_fruits_to_spawn):
+		self.tao.clear()
 		for _ in range(number_of_fruits_to_spawn):
 			fruit = FRUIT()
-			fruit.randomize()	
+			fruit.randomize(self.blocked_positions,self.tao)	
 			fruit_pos = Vector2(fruit.x, fruit.y)
 			self.tao.append(fruit_pos)
 		
